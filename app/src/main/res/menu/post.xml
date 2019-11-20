@@ -3,5 +3,5 @@
     <item android:id="@+id/modify"
         android:title="수정"/>
     <item android:id="@+id/delete"
-        android:title="삭제." />
+        android:title="삭제" />
 </menu>
