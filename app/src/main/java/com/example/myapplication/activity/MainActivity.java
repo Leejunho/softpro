@@ -17,6 +17,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import static com.example.myapplication.Util.showToast;
+
 public class MainActivity extends BasicActivity {
     private FirebaseAuth mAuth;
     private static final String TAG = "MainActivity";
@@ -78,16 +80,16 @@ public class MainActivity extends BasicActivity {
                         DocumentSnapshot document = task.getResult();
                         if (document != null) {
                             if (document.exists()) {
-                                startToast("반갑습니다");
+                                showToast(MainActivity.this,"반갑습니다");
                             } else {
                                 myStartActivity(addinfo.class);
                                 finish();
-                                startToast("회원정보를 추가입력해주세요");
+                                showToast(MainActivity.this,"회원정보를 추가입력해주세요");
                             }
                         }
                     } else {
                         Log.d(TAG, "get failed with ", task.getException());
-                        startToast("잠시 후 다시 시도해주세요");
+                        showToast(MainActivity.this,"잠시 후 다시 시도해주세요");
                     }
                 }
             });
@@ -106,9 +108,5 @@ public class MainActivity extends BasicActivity {
     private void myStartActivity(Class c) {
         Intent intent = new Intent(this, c);
         startActivity(intent);
-    }
-
-    private void startToast(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 }

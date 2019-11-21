@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 import com.example.myapplication.MemberInfo;
 import com.example.myapplication.R;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -16,6 +15,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
+
+import static com.example.myapplication.Util.showToast;
 
 
 public class addinfo extends BasicActivity {
@@ -63,7 +64,7 @@ public class addinfo extends BasicActivity {
             uploader(memberInfo);
         }
         else {
-            startToast( "회원 정보를 입력해 주세요");
+            showToast(addinfo.this, "회원 정보를 입력해 주세요");
         }
     }
 
@@ -73,7 +74,7 @@ public class addinfo extends BasicActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        startToast("회원정보 등록에 성공하였습니다");
+                        showToast(addinfo.this,"회원정보 등록에 성공하였습니다");
                         loaderLayout.setVisibility(View.GONE);
                         myStartActivity(MainActivity.class);
                         finish();
@@ -82,7 +83,7 @@ public class addinfo extends BasicActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        startToast("회원정보 등록에 실패하였습니다");
+                        showToast(addinfo.this,"회원정보 등록에 실패하였습니다");
                         loaderLayout.setVisibility(View.GONE);
                         Log.w(TAG, "Error writing document", e);
                     }
@@ -92,13 +93,9 @@ public class addinfo extends BasicActivity {
     public void onBackPressed() {
         FirebaseAuth.getInstance().signOut();
         myStartActivity(LoginActivity.class);
-        startToast("회원정보 입력을 취소하셨습니다");
+        showToast(addinfo.this,"회원정보 입력을 취소하셨습니다");
         finish();
         super.onBackPressed();
-    }
-
-    private void startToast(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
     private void myStartActivity(Class c) {

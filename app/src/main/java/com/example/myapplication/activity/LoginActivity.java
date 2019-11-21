@@ -31,6 +31,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import static com.example.myapplication.Util.showToast;
+
 
 public class LoginActivity extends BasicActivity {
     final int RC_SIGN_IN = 1001; // 로그인 확인여부 코드
@@ -171,7 +173,7 @@ public class LoginActivity extends BasicActivity {
                             loaderLayout.setVisibility(View.GONE);
                             if (task.isSuccessful()) {
                                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                                startToast("로그인에 성공했습니다");
+                                showToast(LoginActivity.this,"로그인에 성공했습니다");
 
                                 // 로그인한 사용자 정보가 이미 입력되어 있는 상태라면 MainActivity로 아니라면 addInfo로 이동
                                 FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -185,10 +187,10 @@ public class LoginActivity extends BasicActivity {
                                                 if (document != null) {
                                                     if (document.exists()) {
                                                         myStartActivity(MainActivity.class);
-                                                        startToast("반갑습니다");
+                                                        showToast(LoginActivity.this,"반갑습니다");
                                                     } else {
                                                         myStartActivity(addinfo.class);
-                                                        startToast("회원정보를 추가입력해주세요");
+                                                        showToast(LoginActivity.this,"회원정보를 추가입력해주세요");
                                                     }
                                                 }
                                             } else {
@@ -199,21 +201,16 @@ public class LoginActivity extends BasicActivity {
                                 }
                             } else {
                                 if (task.getException() != null) {
-                                    startToast(task.getException().toString());
+                                    showToast(LoginActivity.this, task.getException().toString());
                                 }
                             }
                         }
                     });
         }
         else {
-            startToast( "이메일 또는 비밀번호를 입력해 주세요");
+            showToast(LoginActivity.this,"이메일 또는 비밀번호를 입력해 주세요");
         }
     }
-
-    private void startToast(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-    }
-
     private void myStartActivity(Class c) {
         Intent intent = new Intent(this, c);
         startActivity(intent);

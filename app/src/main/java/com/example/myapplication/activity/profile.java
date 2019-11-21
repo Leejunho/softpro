@@ -16,7 +16,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.myapplication.MemberInfo;
@@ -37,6 +36,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+
+import static com.example.myapplication.Util.showToast;
 
 public class profile extends BasicActivity {
     private static final String TAG = "profileActivity";
@@ -88,7 +89,7 @@ public class profile extends BasicActivity {
 
                 case R.id.button_logout:  // 로그아웃 버튼 클릭했을때 동작
                     FirebaseAuth.getInstance().signOut();
-                    startToast("로그아웃 하였습니다");
+                    showToast(profile.this,"로그아웃 하였습니다");
                     myStartActivity(LoginActivity.class);
                     finish();
                     break;
@@ -112,7 +113,7 @@ public class profile extends BasicActivity {
                         ActivityCompat.requestPermissions(profile.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
                         if (ActivityCompat.shouldShowRequestPermissionRationale(profile.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
                             } else {
-                            startToast("권한을 허용해 주세요");
+                            showToast(profile.this,"권한을 허용해 주세요");
                         }
                     } else {
                         // 권한이 있을 때
@@ -130,7 +131,7 @@ public class profile extends BasicActivity {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     myStartActivity2(GalleryActivity.class);
                 } else {
-                    startToast("권한을 허용해 주세요");
+                    showToast(profile.this,"권한을 허용해 주세요");
                 }
             }
         }
@@ -154,7 +155,7 @@ public class profile extends BasicActivity {
                 MemberInfo memberInfo = new MemberInfo(nickname, address, telephone);
                 uploader(memberInfo);
                 loaderLayout.setVisibility(View.GONE);
-                startToast( "회원 정보 변경에 성공하셨습니다");
+                showToast(profile.this, "회원 정보 변경에 성공하셨습니다");
             }
             else {
                 try{
@@ -177,22 +178,22 @@ public class profile extends BasicActivity {
                                 MemberInfo memberInfo = new MemberInfo(nickname, address, telephone, downloadUri.toString());
                                 uploader(memberInfo);
                                 loaderLayout.setVisibility(View.GONE);
-                                startToast( "회원 정보 변경에 성공하셨습니다");
+                                showToast(profile.this, "회원 정보 변경에 성공하셨습니다");
                             } else {
                                 loaderLayout.setVisibility(View.GONE);
-                                startToast( "회원 정보 전송에 실패하였습니다");
+                                showToast(profile.this, "회원 정보 전송에 실패하였습니다");
                             }
                         }
                     });
                 }catch (FileNotFoundException e){
                     loaderLayout.setVisibility(View.GONE);
                     Log.e("로그", "에러" + e.toString());
-                    startToast( "회원 정보 전송에 실패하였습니다");
+                    showToast(profile.this, "회원 정보 전송에 실패하였습니다");
                 }
             }
         }
         else {
-            startToast( "회원 정보를 입력해 주세요");
+            showToast(profile.this, "회원 정보를 입력해 주세요");
         }
     }
 
@@ -202,23 +203,19 @@ public class profile extends BasicActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        startToast("회원정보 등록을 성공하였습니다");
+                        showToast(profile.this,"회원정보 등록을 성공하였습니다");
                         finish();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        startToast("회원정보 등록에 실패하였습니다");
+                        showToast(profile.this,"회원정보 등록에 실패하였습니다");
                         Log.w(TAG, "Error writing document", e);
                     }
                 });
     }
-
-    private void startToast(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-    }
-
+    
     private void myStartActivity(Class c) {
         Intent intent = new Intent(this, c);
         startActivity(intent);

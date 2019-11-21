@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import com.example.myapplication.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -13,6 +12,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import static com.example.myapplication.Util.showToast;
 
 public class SignUpActivity extends BasicActivity {
     private FirebaseAuth mAuth;
@@ -57,30 +58,26 @@ public class SignUpActivity extends BasicActivity {
                                 if (task.isSuccessful()) {
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     loaderLayout.setVisibility(View.GONE);
-                                    startToast("회원가입에 성공하였습니다.");
+                                    showToast(SignUpActivity.this,"회원가입에 성공하였습니다.");
                                     myStartActivity(addinfo.class);
                                     finish();
                                 } else {
                                     loaderLayout.setVisibility(View.GONE);
-                                    startToast("회원가입에 실패하셨습니다.");
+                                    showToast(SignUpActivity.this,"회원가입에 실패하셨습니다.");
                                     if (task.getException() != null) {
-                                        startToast(task.getException().toString());
+                                        showToast(SignUpActivity.this, task.getException().toString());
                                     }
                                 }
                             }
                         });
             } else {
-                startToast("비밀번호가 일치하지 않습니다.");
+                showToast(SignUpActivity.this,"비밀번호가 일치하지 않습니다.");
             }
         } else {
-            startToast("이메일 또는 비밀번호를 입력해 주세요");
+            showToast(SignUpActivity.this,"이메일 또는 비밀번호를 입력해 주세요");
         }
     }
-
-    private void startToast(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-    }
-
+    
     private void myStartActivity(Class c) {
         Intent intent = new Intent(this, c);
         startActivity(intent);

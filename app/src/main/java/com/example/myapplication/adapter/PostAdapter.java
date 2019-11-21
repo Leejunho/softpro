@@ -1,6 +1,7 @@
 package com.example.myapplication.adapter;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -8,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.PostInfo;
 import com.example.myapplication.R;
+import com.example.myapplication.activity.PostActivity;
 import com.example.myapplication.listener.OnPostListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -38,7 +39,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     }
 
     public PostAdapter(Activity activity, ArrayList<PostInfo> myDataset) {
-        mDataset = myDataset;
+        this.mDataset = myDataset;
         this.activity = activity;
         db = FirebaseFirestore.getInstance();
     }
@@ -58,7 +59,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(activity, PostActivity.class);
+                intent.putExtra("postInfo", mDataset.get(postViewHolder.getAdapterPosition()));
+                activity.startActivity(intent);
             }
         });
 
@@ -100,13 +103,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                String id = mDataset.get(position).getId();
                 switch (menuItem.getItemId()) {
                     case R.id.modify:  // 수정
-                        onPostListener.onModify(id);
+                        onPostListener.onModify(position);
                         return true;
                     case R.id.delete:  // 삭제
-                        onPostListener.onDelete(id);
+                        onPostListener.onDelete(position);
                         return true;
                     default:
                         return false;
@@ -116,9 +118,5 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.post, popup.getMenu());
         popup.show();
-    }
-
-    private void startToast(String msg) {
-        Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show();
     }
 }

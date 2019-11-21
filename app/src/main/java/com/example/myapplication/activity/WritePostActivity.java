@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import com.example.myapplication.R;
 import com.example.myapplication.PostInfo;
@@ -17,10 +16,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Date;
 
+import static com.example.myapplication.Util.showToast;
+
 public class WritePostActivity extends BasicActivity {
-    private static final String TAG = "WritePostActivity";
     private FirebaseUser user;
     private RelativeLayout loaderLayout;
+    private PostInfo postInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +31,9 @@ public class WritePostActivity extends BasicActivity {
         findViewById(R.id.button_send).setOnClickListener(onClickListener);
 
         loaderLayout = findViewById(R.id.loaderLayout);
+
+        postInfo = (PostInfo)getIntent().getSerializableExtra("postInfo");
+        postInit();
     }
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -55,35 +59,27 @@ public class WritePostActivity extends BasicActivity {
             user = FirebaseAuth.getInstance().getCurrentUser();
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
-            String id = getIntent().getStringExtra("id");
-            DocumentReference dr;
-            if(id == null) {
-                dr = db.collection("posts").document();
-            }
-            else {
-                dr = db.collection("posts").document(id);
-            }
-            final DocumentReference documentReference = dr;
+            final DocumentReference documentReference = postInfo == null ? db.collection("posts").document() : db.collection("posts").document(postInfo.getId());
+            final Date date = postInfo == null ? new Date() : postInfo.getCreatedAt();
 
             // Firebase db에 정보들을 저장하기 위해 값들을 받아옴
-            PostInfo postInfo = new PostInfo(title, item_name, price, term, contents, user.getUid(), new Date());
             if (contents.length() == 0) {
                 postInfo.setContents("내용없음");
             }
             // db 저장 함수
-            uploader(documentReference, postInfo);
+            uploader(documentReference, new PostInfo(title, item_name, price, term, contents, user.getUid(), date));
         } else {
-            startToast("정보를 입력해 주세요");
+            showToast(WritePostActivity.this, "정보를 입력해 주세요");
         }
     }
 
     private void uploader(DocumentReference documentReference, PostInfo postInfo) {
-        documentReference.set(postInfo)
+        documentReference.set(postInfo.getPostInfo())
             .addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
                     loaderLayout.setVisibility(View.GONE);
-                    startToast("게시글 등록에 성공하셨습니다");
+                    showToast(WritePostActivity.this,"게시글 등록에 성공하셨습니다");
                     // 게시판 새로 갱신
                     onBackPressed();
                 }
@@ -92,12 +88,18 @@ public class WritePostActivity extends BasicActivity {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     loaderLayout.setVisibility(View.GONE);
-                    startToast("게시글 등록에 실패하셨습니다");
+                    showToast(WritePostActivity.this,"게시글 등록에 실패하셨습니다");
                 }
             });
     }
 
-    private void startToast(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    private void postInit() {
+        if(postInfo != null) {
+            ((EditText) findViewById(R.id.editText_title)).setText(postInfo.getTitle());
+            ((EditText) findViewById(R.id.editText_item_name)).setText(postInfo.getItem_name());
+            ((EditText) findViewById(R.id.editText_price)).setText(postInfo.getPrice());
+            ((EditText) findViewById(R.id.editText_term)).setText(postInfo.getTerm());
+            ((EditText) findViewById(R.id.editText_contents)).setText(postInfo.getContents());
+        }
     }
 }

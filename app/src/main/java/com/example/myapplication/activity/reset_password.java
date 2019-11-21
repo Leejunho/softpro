@@ -5,11 +5,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 import com.example.myapplication.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+
+import static com.example.myapplication.Util.showToast;
 
 public class reset_password extends BasicActivity {
     private FirebaseAuth mAuth;
@@ -48,19 +49,15 @@ public class reset_password extends BasicActivity {
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
                                 loaderLayout.setVisibility(View.GONE);
-                                startToast( "이메일을 보냈습니다");
+                                showToast(reset_password.this, "이메일을 보냈습니다");
                             }
                         }
                     });
         }
         else {
             loaderLayout.setVisibility(View.GONE);
-            startToast( "이메일을 입력해 주세요");
+            showToast(reset_password.this, "이메일을 입력해 주세요");
         }
-    }
-
-    private void startToast(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 }
 
