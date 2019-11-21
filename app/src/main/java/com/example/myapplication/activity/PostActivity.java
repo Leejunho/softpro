@@ -1,7 +1,9 @@
 package com.example.myapplication.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -27,6 +29,9 @@ import static com.example.myapplication.Util.showToast;
 public class PostActivity extends BasicActivity {
     private PostInfo postInfo;
     private FirebaseFirestore db;
+    private TextView textView_title;
+    private TextView textView_contents;
+    private TextView createdAtTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,15 +42,15 @@ public class PostActivity extends BasicActivity {
         db = FirebaseFirestore.getInstance();
 
         // 게시글 제목
-        TextView textView_title = findViewById(R.id.TextView_title);
+        textView_title = findViewById(R.id.TextView_title);
         textView_title.setText(postInfo.getTitle());
 
         // 게시글 내용
-        TextView textView_contents = findViewById(R.id.textView_contents);
+        textView_contents = findViewById(R.id.textView_contents);
         textView_contents.setText(postInfo.getContents());
 
         // 게시글 올린 날짜
-        TextView createdAtTextView = findViewById(R.id.textView_createdAt);
+        createdAtTextView = findViewById(R.id.textView_createdAt);
         createdAtTextView.setText(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(postInfo.getCreatedAt()));
 
         findViewById(R.id.menu).setOnClickListener(onClickListener);
@@ -54,7 +59,7 @@ public class PostActivity extends BasicActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        postUpdate();
+        postInfo = (PostInfo)getIntent().getSerializableExtra("postInfo");
     }
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -67,6 +72,20 @@ public class PostActivity extends BasicActivity {
             }
         }
     };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case 0:
+                postInfo = (PostInfo)data.getSerializableExtra("postInfo");
+
+                // 수정한 내용이 보이도록 새로 갱신
+                textView_title.setText(postInfo.getTitle());
+                textView_contents.setText(postInfo.getContents());
+                break;
+        }
+    }
 
     //버튼이 눌렸을때 여기로옴
     public void showPopup(View v){
@@ -115,6 +134,6 @@ public class PostActivity extends BasicActivity {
     private void myStartActivity(Class c, PostInfo postInfo) {
         Intent intent = new Intent(this, c);
         intent.putExtra("postInfo", postInfo);
-        startActivity(intent);
+        startActivityForResult(intent, 0);
     }
 }

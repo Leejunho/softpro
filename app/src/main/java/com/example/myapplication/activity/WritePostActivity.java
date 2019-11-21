@@ -1,6 +1,9 @@
 package com.example.myapplication.activity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -73,7 +76,7 @@ public class WritePostActivity extends BasicActivity {
         }
     }
 
-    private void uploader(DocumentReference documentReference, PostInfo postInfo) {
+    private void uploader(DocumentReference documentReference, final PostInfo postInfo) {
         documentReference.set(postInfo.getPostInfo())
             .addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
@@ -81,7 +84,10 @@ public class WritePostActivity extends BasicActivity {
                     loaderLayout.setVisibility(View.GONE);
                     showToast(WritePostActivity.this,"게시글 등록에 성공하셨습니다");
                     // 게시판 새로 갱신
-                    onBackPressed();
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra("postInfo", postInfo);
+                    setResult(Activity.RESULT_OK, resultIntent);
+                    finish();
                 }
             })
             .addOnFailureListener(new OnFailureListener() {

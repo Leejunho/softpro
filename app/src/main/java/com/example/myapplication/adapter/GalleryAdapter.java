@@ -15,8 +15,7 @@ import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
 
 import java.util.ArrayList;
-
-public class GalleryAdapter  extends RecyclerView.Adapter<GalleryAdapter.GalleryViewHolder> {
+public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryViewHolder> {
     private ArrayList<String> mDataset;
     private Activity activity;
 
