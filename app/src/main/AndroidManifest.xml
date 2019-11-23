@@ -18,7 +18,7 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".activity.LoginActivity" />
         <activity android:name=".activity.reset_password"/>
-        <activity android:name=".activity.profile" />
+        <activity android:name=".activity.profileActivity" />
         <activity android:name=".activity.addinfo" />
         <activity android:name=".activity.notice_box" />
         <activity android:name=".activity.notice_board" />

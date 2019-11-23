@@ -3,16 +3,15 @@ package com.example.myapplication.activity;
 import androidx.annotation.NonNull;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.example.myapplication.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserInfo;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -20,8 +19,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import static com.example.myapplication.Util.showToast;
 
 public class MainActivity extends BasicActivity {
-    private FirebaseAuth mAuth;
     private static final String TAG = "MainActivity";
+    private FirebaseFirestore db;
+    private FirebaseUser user;
+    private TextView textView_nickname;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,14 +33,11 @@ public class MainActivity extends BasicActivity {
         findViewById(R.id.button_board).setOnClickListener(onClickListener);
         findViewById(R.id.button_note).setOnClickListener(onClickListener);
         findViewById(R.id.button_profile).setOnClickListener(onClickListener);
-        TextView textView_nickname = (TextView) findViewById(R.id.textView_usernickname) ;
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user != null) {
-            for (UserInfo profile : user.getProviderData()) {
-                String name = profile.getDisplayName();
-                textView_nickname.setText(name);
-            }
-        }
+        textView_nickname = (TextView) findViewById(R.id.textView_usernickname) ;
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        db = FirebaseFirestore.getInstance();
+
+        showToast(MainActivity.this,"반갑습니다");
     }
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -59,7 +57,7 @@ public class MainActivity extends BasicActivity {
                     break;
 
                 case R.id.button_profile:  // 회원정보 버튼 클릭했을때 동작
-                    myStartActivity(profile.class);
+                    myStartActivity(profileActivity.class);
                     break;
             }
         }
@@ -69,18 +67,16 @@ public class MainActivity extends BasicActivity {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         // 로그인한 사용자 정보가 이미 입력되어 있는 상태가 아니라면 addInfo로 이동
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
         if(user != null) {
-            DocumentReference docRef = db.collection("users").document(user.getUid());
-            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            DocumentReference documentReference = db.collection("users").document(user.getUid());
+            documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
                         if (document != null) {
                             if (document.exists()) {
-                                showToast(MainActivity.this,"반갑습니다");
+                                textView_nickname.setText(document.getData().get("nickname").toString() + "님 반갑습니다");
                             } else {
                                 myStartActivity(addinfo.class);
                                 finish();
@@ -88,7 +84,6 @@ public class MainActivity extends BasicActivity {
                             }
                         }
                     } else {
-                        Log.d(TAG, "get failed with ", task.getException());
                         showToast(MainActivity.this,"잠시 후 다시 시도해주세요");
                     }
                 }

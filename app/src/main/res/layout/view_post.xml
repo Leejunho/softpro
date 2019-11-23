@@ -14,28 +14,24 @@
         android:orientation="horizontal"
         android:padding="5dp">
 
+        <ImageView
+            android:id="@+id/imageView_profile"
+            android:layout_width="27dp"
+            android:layout_height="27dp"
+            android:layout_gravity="center_vertical"
+            android:adjustViewBounds="true"
+            app:srcCompat="@android:drawable/sym_def_app_icon" />
+
         <TextView
             android:id="@+id/TextView_title"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_marginStart="5dp"
+            android:layout_weight="0"
             android:textColor="#000000"
             android:textSize="20sp"
             android:textStyle="bold"
-            tools:text="테이블" />
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/menu"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            app:cardCornerRadius="20dp">
-
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:srcCompat="@drawable/ic_more_vert_black_24dp" />
-        </androidx.cardview.widget.CardView>
+            tools:text="글제목" />
 
     </LinearLayout>
 

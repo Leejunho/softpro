@@ -9,6 +9,14 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/textView_createdAt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:text="TextView"
+            tools:text="2019-04-25 작성" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -24,7 +32,7 @@
                 android:textColor="#000000"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                tools:text="테이블" />
+                tools:text="글제목" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/menu"
@@ -43,19 +51,37 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/textView_contents"
+            android:id="@+id/textView_item_name"
             android:layout_width="match_parent"
-            android:layout_height="290dp"
-            android:text="TextView"
-            tools:text="내용" />
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            tools:text="물품 : " />
 
         <TextView
-            android:id="@+id/textView_createdAt"
+            android:id="@+id/textView_price"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="end"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            tools:text="제안금액 : " />
+
+        <TextView
+            android:id="@+id/textView_term"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginBottom="20dp"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            tools:text="기간 :     까지" />
+
+        <TextView
+            android:id="@+id/textView_contents"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingStart="10dp"
             android:text="TextView"
-            tools:text="2019-04-25" />
+            tools:text="내용" />
 
     </LinearLayout>
 </ScrollView>

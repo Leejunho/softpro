@@ -27,6 +27,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -39,13 +41,15 @@ import java.io.InputStream;
 
 import static com.example.myapplication.Util.showToast;
 
-public class profile extends BasicActivity {
+public class profileActivity extends BasicActivity {
     private static final String TAG = "profileActivity";
     private FirebaseAuth mAuth;
     private ImageView profileImageView;
     private String profilePath;
     private FirebaseUser user;
+    private FirebaseFirestore db;
     private RelativeLayout loaderLayout;
+    private String photoUrl = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +57,8 @@ public class profile extends BasicActivity {
         setContentView(R.layout.activity_profile);
 
         mAuth = FirebaseAuth.getInstance();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        db = FirebaseFirestore.getInstance();
 
         profileImageView = findViewById(R.id.imageView_profile);
         profileImageView.setOnClickListener(onClickListener);
@@ -63,7 +69,37 @@ public class profile extends BasicActivity {
         findViewById(R.id.button_gallery).setOnClickListener(onClickListener);
 
         loaderLayout = findViewById(R.id.loaderLayout);
+
+        showuserData();
     }
+
+    private void showuserData() {
+        if(user != null) {
+            DocumentReference documentReference = db.collection("users").document(user.getUid());
+            documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document != null) {
+                            if (document.exists()) {
+                                if(document.getData().get("photoUrl") != null) {
+                                    Glide.with(profileActivity.this).load(document.getData().get("photoUrl")).centerCrop().override(500).into(profileImageView);
+                                    photoUrl = document.getData().get("photoUrl").toString();
+                                }
+                                ((EditText) findViewById(R.id.editText_nickname)).setText(document.getData().get("nickname").toString());
+                                ((EditText) findViewById(R.id.editText_telephone)).setText(document.getData().get("telephone").toString());
+                                ((EditText) findViewById(R.id.editText_address)).setText(document.getData().get("address").toString());
+                            }
+                        }
+                    } else {
+                        showToast(profileActivity.this,"잠시 후 다시 시도해주세요");
+                    }
+                }
+            });
+        }
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -89,7 +125,7 @@ public class profile extends BasicActivity {
 
                 case R.id.button_logout:  // 로그아웃 버튼 클릭했을때 동작
                     FirebaseAuth.getInstance().signOut();
-                    showToast(profile.this,"로그아웃 하였습니다");
+                    showToast(profileActivity.this,"로그아웃 하였습니다");
                     myStartActivity(LoginActivity.class);
                     finish();
                     break;
@@ -109,11 +145,11 @@ public class profile extends BasicActivity {
                     break;
 
                 case R.id.button_gallery:  // 갤러리 버튼 클릭했을때 동작
-                    if (ContextCompat.checkSelfPermission(profile.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(profile.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-                        if (ActivityCompat.shouldShowRequestPermissionRationale(profile.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    if (ContextCompat.checkSelfPermission(profileActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(profileActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                        if (ActivityCompat.shouldShowRequestPermissionRationale(profileActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
                             } else {
-                            showToast(profile.this,"권한을 허용해 주세요");
+                            showToast(profileActivity.this,"권한을 허용해 주세요");
                         }
                     } else {
                         // 권한이 있을 때
@@ -131,7 +167,7 @@ public class profile extends BasicActivity {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     myStartActivity2(GalleryActivity.class);
                 } else {
-                    showToast(profile.this,"권한을 허용해 주세요");
+                    showToast(profileActivity.this,"권한을 허용해 주세요");
                 }
             }
         }
@@ -150,12 +186,12 @@ public class profile extends BasicActivity {
             StorageReference storageRef = storage.getReference();
             final StorageReference mountainImagesRef = storageRef.child("users/"+user.getUid()+"/profileImage.jpg");
 
-            // 사진을 입력하지 않았을 경우 사진을 제외하고 db에 정보가 들어감
+            // 사진을 입력하지 않았을 경우 기존 저장되있던 사진이 올라감 없었으면 null 있으면 pictureUrl
             if(profilePath == null) {
-                MemberInfo memberInfo = new MemberInfo(nickname, address, telephone);
+                MemberInfo memberInfo = new MemberInfo(nickname, address, telephone, photoUrl);
                 uploader(memberInfo);
                 loaderLayout.setVisibility(View.GONE);
-                showToast(profile.this, "회원 정보 변경에 성공하셨습니다");
+                showToast(profileActivity.this, "회원 정보 변경에 성공하셨습니다");
             }
             else {
                 try{
@@ -178,22 +214,22 @@ public class profile extends BasicActivity {
                                 MemberInfo memberInfo = new MemberInfo(nickname, address, telephone, downloadUri.toString());
                                 uploader(memberInfo);
                                 loaderLayout.setVisibility(View.GONE);
-                                showToast(profile.this, "회원 정보 변경에 성공하셨습니다");
+                                showToast(profileActivity.this, "회원 정보 변경에 성공하셨습니다");
                             } else {
                                 loaderLayout.setVisibility(View.GONE);
-                                showToast(profile.this, "회원 정보 전송에 실패하였습니다");
+                                showToast(profileActivity.this, "회원 정보 전송에 실패하였습니다");
                             }
                         }
                     });
                 }catch (FileNotFoundException e){
                     loaderLayout.setVisibility(View.GONE);
                     Log.e("로그", "에러" + e.toString());
-                    showToast(profile.this, "회원 정보 전송에 실패하였습니다");
+                    showToast(profileActivity.this, "회원 정보 전송에 실패하였습니다");
                 }
             }
         }
         else {
-            showToast(profile.this, "회원 정보를 입력해 주세요");
+            showToast(profileActivity.this, "회원 정보를 입력해 주세요");
         }
     }
 
@@ -203,14 +239,14 @@ public class profile extends BasicActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        showToast(profile.this,"회원정보 등록을 성공하였습니다");
+                        showToast(profileActivity.this,"회원정보 등록을 성공하였습니다");
                         finish();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        showToast(profile.this,"회원정보 등록에 실패하였습니다");
+                        showToast(profileActivity.this,"회원정보 등록에 실패하였습니다");
                         Log.w(TAG, "Error writing document", e);
                     }
                 });

@@ -1,9 +1,7 @@
 package com.example.myapplication.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -23,6 +21,7 @@ import static com.example.myapplication.Util.showToast;
 
 public class WritePostActivity extends BasicActivity {
     private FirebaseUser user;
+    private FirebaseFirestore db;
     private RelativeLayout loaderLayout;
     private PostInfo postInfo;
 
@@ -60,17 +59,17 @@ public class WritePostActivity extends BasicActivity {
         if (title.length() > 0 && item_name.length() > 0 && price.length() > 0 && term.length() > 0) {
             loaderLayout.setVisibility(View.VISIBLE);
             user = FirebaseAuth.getInstance().getCurrentUser();
+            db = FirebaseFirestore.getInstance();
 
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
             final DocumentReference documentReference = postInfo == null ? db.collection("posts").document() : db.collection("posts").document(postInfo.getId());
-            final Date date = postInfo == null ? new Date() : postInfo.getCreatedAt();
+            //final Date date = postInfo == null ? new Date() : postInfo.getCreatedAt();
 
             // Firebase db에 정보들을 저장하기 위해 값들을 받아옴
             if (contents.length() == 0) {
                 postInfo.setContents("내용없음");
             }
             // db 저장 함수
-            uploader(documentReference, new PostInfo(title, item_name, price, term, contents, user.getUid(), date));
+            uploader(documentReference, new PostInfo(title, item_name, price, term, contents, user.getUid(), new Date()));
         } else {
             showToast(WritePostActivity.this, "정보를 입력해 주세요");
         }
@@ -84,9 +83,9 @@ public class WritePostActivity extends BasicActivity {
                     loaderLayout.setVisibility(View.GONE);
                     showToast(WritePostActivity.this,"게시글 등록에 성공하셨습니다");
                     // 게시판 새로 갱신
-                    Intent resultIntent = new Intent();
-                    resultIntent.putExtra("postInfo", postInfo);
-                    setResult(Activity.RESULT_OK, resultIntent);
+                    Intent intent = new Intent();
+                    intent.putExtra("postInfo", postInfo);
+                    setResult(0, intent);
                     finish();
                 }
             })

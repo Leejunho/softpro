@@ -1,24 +1,21 @@
 package com.example.myapplication.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 
 import com.example.myapplication.PostInfo;
 import com.example.myapplication.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
@@ -28,6 +25,7 @@ import static com.example.myapplication.Util.showToast;
 
 public class PostActivity extends BasicActivity {
     private PostInfo postInfo;
+    private FirebaseUser user;
     private FirebaseFirestore db;
     private TextView textView_title;
     private TextView textView_contents;
@@ -38,12 +36,36 @@ public class PostActivity extends BasicActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
 
-        postInfo = (PostInfo)getIntent().getSerializableExtra("postInfo");
+        user = FirebaseAuth.getInstance().getCurrentUser();
         db = FirebaseFirestore.getInstance();
 
+        // 게시글을 클릭하면 postInfo 데이터를 PostActivity로 넘겨받음.
+        postInfo = (PostInfo)getIntent().getSerializableExtra("postInfo");
+
+
+        findViewById(R.id.menu).setOnClickListener(onClickListener);
+
+        setTextinvalues();
+
+        checkauthority();
+    }
+
+    private void setTextinvalues() {
         // 게시글 제목
         textView_title = findViewById(R.id.TextView_title);
         textView_title.setText(postInfo.getTitle());
+
+        // 게시글 물품
+        textView_contents = findViewById(R.id.textView_item_name);
+        textView_contents.setText("물품: " + postInfo.getItem_name());
+
+        // 게시글 제안금액
+        textView_contents = findViewById(R.id.textView_price);
+        textView_contents.setText("제안금액: " + postInfo.getPrice());
+
+        // 게시글 기간
+        textView_contents = findViewById(R.id.textView_term);
+        textView_contents.setText("기간: ~" + postInfo.getTerm());
 
         // 게시글 내용
         textView_contents = findViewById(R.id.textView_contents);
@@ -51,9 +73,22 @@ public class PostActivity extends BasicActivity {
 
         // 게시글 올린 날짜
         createdAtTextView = findViewById(R.id.textView_createdAt);
-        createdAtTextView.setText(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(postInfo.getCreatedAt()));
+        createdAtTextView.setText(new SimpleDateFormat("yyyy-MM-dd HH:mm 작성", Locale.getDefault()).format(postInfo.getCreatedAt()));
+    }
 
-        findViewById(R.id.menu).setOnClickListener(onClickListener);
+    public void checkauthority() {
+        if(user.getUid().equals(postInfo.getPublisher())) {
+            // 게시글의 작성자는 수정 삭제 가능
+            findViewById(R.id.menu).setVisibility(View.VISIBLE);
+        }
+        else if(user.getUid().equals("1R5r4L6O1PeA4h93RrCNYK4zQzS2") || user.getUid().equals("4cuaqNgeOCaun6dxrakLdRTkDpj1") || user.getUid().equals("T8oDzbNpoUYKd77AycscZU3bXry1"))  {
+            // 관리자의 경우 모든 글 수정 삭제 가능
+            findViewById(R.id.menu).setVisibility(View.VISIBLE);
+        }
+        else {
+            // 자신의 게시글이 아니라면 수정 삭제 불가능하도록 View gone
+            findViewById(R.id.menu).setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -81,8 +116,7 @@ public class PostActivity extends BasicActivity {
                 postInfo = (PostInfo)data.getSerializableExtra("postInfo");
 
                 // 수정한 내용이 보이도록 새로 갱신
-                textView_title.setText(postInfo.getTitle());
-                textView_contents.setText(postInfo.getContents());
+                setTextinvalues();
                 break;
         }
     }

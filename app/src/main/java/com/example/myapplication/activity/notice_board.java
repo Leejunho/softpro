@@ -11,10 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myapplication.PostInfo;
 import com.example.myapplication.R;
 import com.example.myapplication.adapter.PostAdapter;
-import com.example.myapplication.listener.OnPostListener;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -26,8 +23,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Date;
-
-import static com.example.myapplication.Util.showToast;
 
 public class notice_board extends BasicActivity {
     private FirebaseUser user;
@@ -46,14 +41,12 @@ public class notice_board extends BasicActivity {
         postList = new ArrayList<>();
 
         findViewById(R.id.floatingActionButton).setOnClickListener(onClickListener);
-        RecyclerView recyclerView = findViewById(R.id.recyclerview);
 
         postAdapter = new PostAdapter(notice_board.this, postList);
-        postAdapter.setOnPostListener(onPostListener);
 
+        RecyclerView recyclerView = findViewById(R.id.recyclerview);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(notice_board.this, 1));  // 게시판 spanCount:1 줄씩 표시
-
         recyclerView.setAdapter(postAdapter);
     }
 
@@ -62,35 +55,6 @@ public class notice_board extends BasicActivity {
         super.onResume();
         postUpdate();
     }
-
-    OnPostListener onPostListener = new OnPostListener() {
-        @Override
-        public void onDelete(int position) {
-            // 게시글 삭제
-            String id = postList.get(position).getId();
-            db.collection("posts").document(id)
-                    .delete()
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            showToast(notice_board.this, "게시글을 삭제하였습니다");
-                            postUpdate();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            showToast(notice_board.this, "게시글을 삭제하지 못하였습니다");
-                        }
-                    });
-        }
-
-        @Override
-        public void onModify(int position) {
-            // 게시글 수정  postList의 정보들을 전달  postList 정보들이 postInfo 형식임
-            myStartActivity(WritePostActivity.class, postList.get(position));
-        }
-    };
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -134,12 +98,6 @@ public class notice_board extends BasicActivity {
 
     private void myStartActivity(Class c) {
         Intent intent = new Intent(this, c);
-        startActivity(intent);
-    }
-
-    private void myStartActivity(Class c, PostInfo postInfo) {
-        Intent intent = new Intent(this, c);
-        intent.putExtra("postInfo", postInfo);
         startActivity(intent);
     }
 }
