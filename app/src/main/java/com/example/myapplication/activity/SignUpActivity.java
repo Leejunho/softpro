@@ -59,7 +59,7 @@ public class SignUpActivity extends BasicActivity {
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     loaderLayout.setVisibility(View.GONE);
                                     showToast(SignUpActivity.this,"회원가입에 성공하였습니다.");
-                                    myStartActivity(addinfo.class);
+                                    myStartActivity(AddinfoActivity.class);
                                     finish();
                                 } else {
                                     loaderLayout.setVisibility(View.GONE);

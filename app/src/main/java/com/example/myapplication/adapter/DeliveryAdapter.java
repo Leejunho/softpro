@@ -68,12 +68,12 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.Delive
         CardView cardView = holder.cardView;
 
         // 택배함 번호
-        TextView TextView_title = cardView.findViewById(R.id.TextView_title);
+        TextView TextView_title = cardView.findViewById(R.id.textView_title);
         TextView_title.setText(mDataset.get(position).getBoxnum());
 
         // 택배가 도착한 날짜
         TextView textView_createdAt = cardView.findViewById(R.id.textView_createdAt);
-        textView_createdAt.setText(new SimpleDateFormat("yyyy-MM-dd HH:mm 도착", Locale.getDefault()).format(mDataset.get(position).getCreatedAt()));
+        textView_createdAt.setText(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(mDataset.get(position).getCreatedAt()));
     }
 
     @Override

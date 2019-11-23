@@ -2,7 +2,10 @@ package com.example.myapplication.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.PopupMenu;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -24,11 +27,12 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class notice_board extends BasicActivity {
+public class NoticeboardActivity extends BasicActivity {
     private FirebaseUser user;
     private FirebaseFirestore db;
     private PostAdapter postAdapter;
     private ArrayList<PostInfo> postList;
+    private String name = "createdAt";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,12 +45,13 @@ public class notice_board extends BasicActivity {
         postList = new ArrayList<>();
 
         findViewById(R.id.floatingActionButton).setOnClickListener(onClickListener);
+        findViewById(R.id.menu).setOnClickListener(onClickListener);
 
-        postAdapter = new PostAdapter(notice_board.this, postList);
+        postAdapter = new PostAdapter(NoticeboardActivity.this, postList);
 
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new GridLayoutManager(notice_board.this, 1));  // 게시판 spanCount:1 줄씩 표시
+        recyclerView.setLayoutManager(new GridLayoutManager(NoticeboardActivity.this, 1));  // 게시판 spanCount:1 줄씩 표시
         recyclerView.setAdapter(postAdapter);
     }
 
@@ -63,6 +68,10 @@ public class notice_board extends BasicActivity {
                 case R.id.floatingActionButton:  // 글쓰기 버튼 클릭했을때 동작
                     myStartActivity(WritePostActivity.class);
                     break;
+
+                case R.id.menu:  // 점3개 메뉴 버튼 클릭했을때 동작
+                    showPopup(v);
+                    break;
             }
         }
     };
@@ -70,7 +79,7 @@ public class notice_board extends BasicActivity {
     private void postUpdate() {
         if(user != null) {
             CollectionReference collectionReference = db.collection("posts");
-            collectionReference.orderBy("createdAt", Query.Direction.DESCENDING).get()  // 시간순으로 내림차순 정렬하여 게시판에 보여줌
+            collectionReference.orderBy(name, Query.Direction.DESCENDING).get()  // 시간순으로 내림차순 정렬하여 게시판에 보여줌
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -80,13 +89,13 @@ public class notice_board extends BasicActivity {
                                     postList.add(new PostInfo(
                                             // db에 저장되어있는 게시판 작성의 값들을 postList에 저장
                                             document.getData().get("title").toString(),
-                                            document.getData().get("item_name").toString(),
-                                            document.getData().get("price").toString(),
+                                            Integer.parseInt(document.getData().get("price").toString()),
                                             document.getData().get("term").toString(),
                                             document.getData().get("contents").toString(),
                                             document.getData().get("publisher").toString(),
                                             new Date(document.getDate("createdAt").getTime()),
-                                            document.getId()
+                                            document.getId(),
+                                            ((Long)document.getData().get("viewCount")).intValue()
                                     ));
                                 }
                                 postAdapter.notifyDataSetChanged();
@@ -94,6 +103,39 @@ public class notice_board extends BasicActivity {
                         }
                     });
         }
+    }
+
+    public void showPopup(View v){
+        PopupMenu popup = new PopupMenu(this, v);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.notice, popup.getMenu());
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                //Log.d("1", "메뉴를 눌렀슴: ");
+                switch(menuItem.getItemId()){
+                    case R.id.sortbytime:
+                        // 시간순 정렬
+                        name = "createdAt";
+                        postUpdate();
+                        break;
+
+                    case R.id.sortbymoney:
+                        // 금액순 정렬
+                        name = "price";
+                        postUpdate();
+                        break;
+
+                    case R.id.sortbyviewCount:
+                        // 금액순 정렬
+                        name = "viewCount";
+                        postUpdate();
+                        break;
+                }
+                return false;
+            }
+        });
+        popup.show();
     }
 
     private void myStartActivity(Class c) {

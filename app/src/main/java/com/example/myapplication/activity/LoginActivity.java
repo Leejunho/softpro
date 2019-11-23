@@ -168,7 +168,7 @@ public class LoginActivity extends BasicActivity {
                                                         myStartActivity(MainActivity.class);
                                                         showToast(LoginActivity.this, "반갑습니다");
                                                     } else {
-                                                        myStartActivity(addinfo.class);
+                                                        myStartActivity(AddinfoActivity.class);
                                                         showToast(LoginActivity.this, "회원정보를 추가입력해주세요");
                                                     }
                                                 }

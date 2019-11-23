@@ -6,18 +6,21 @@ public class MemberInfo {
     private String address;
     private String telephone;
     private String photoUrl;
+    private int point;
 
-    public MemberInfo(String nickname, String address, String telephone, String photoUrl) {
+    public MemberInfo(String nickname, String address, String telephone, String photoUrl, int point) {
         this.nickname = nickname;
         this.address = address;
         this.telephone = telephone;
         this.photoUrl = photoUrl;
+        this.point = point;
     }
 
-    public MemberInfo(String nickname, String address, String telephone) {
+    public MemberInfo(String nickname, String address, String telephone, int point) {
         this.nickname = nickname;
         this.address = address;
         this.telephone = telephone;
+        this.point = point;
     }
 
     public String getNickname() {
@@ -46,5 +49,12 @@ public class MemberInfo {
     }
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
+    }
+
+    public int getPoint() {
+        return this.point;
+    }
+    public void setPoint(int point) {
+        this.point = point;
     }
 }

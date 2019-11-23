@@ -32,7 +32,7 @@ import java.util.Date;
 
 import static com.example.myapplication.Util.showToast;
 
-public class delivery_status extends BasicActivity {
+public class DeliverystatusActivity extends BasicActivity {
     private FirebaseUser user;
     private FirebaseFirestore db;
     private RelativeLayout loaderLayout;
@@ -53,12 +53,12 @@ public class delivery_status extends BasicActivity {
 
         findViewById(R.id.button_make).setOnClickListener(onClickListener);
 
-        deliveryAdapter = new DeliveryAdapter(delivery_status.this, deliveryList);
+        deliveryAdapter = new DeliveryAdapter(DeliverystatusActivity.this, deliveryList);
         deliveryAdapter.setOnPostListener(onPostListener);
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new GridLayoutManager(delivery_status.this, 1));  // 게시판 spanCount:1 줄씩 표시
+        recyclerView.setLayoutManager(new GridLayoutManager(DeliverystatusActivity.this, 1));  // 게시판 spanCount:1 줄씩 표시
         recyclerView.setAdapter(deliveryAdapter);
     }
 
@@ -81,14 +81,14 @@ public class delivery_status extends BasicActivity {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            showToast(delivery_status.this, "택배함을 열었습니다");
+                            showToast(DeliverystatusActivity.this, "택배함을 열었습니다");
                             deliveryUpdate();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            showToast(delivery_status.this, "택배함을 열지 못하였습니다");
+                            showToast(DeliverystatusActivity.this, "택배함을 열지 못하였습니다");
                         }
                     });
         }
@@ -151,7 +151,7 @@ public class delivery_status extends BasicActivity {
                         @Override
                         public void onSuccess(Void aVoid) {
                             loaderLayout.setVisibility(View.GONE);
-                            showToast(delivery_status.this, "택배가 도착했습니다");
+                            showToast(DeliverystatusActivity.this, "택배가 도착했습니다");
                             deliveryUpdate();
                         }
                     })
@@ -159,7 +159,7 @@ public class delivery_status extends BasicActivity {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             loaderLayout.setVisibility(View.GONE);
-                            showToast(delivery_status.this, "실패");
+                            showToast(DeliverystatusActivity.this, "실패");
                         }
                     });
         }

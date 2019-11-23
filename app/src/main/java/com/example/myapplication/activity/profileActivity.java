@@ -50,6 +50,7 @@ public class profileActivity extends BasicActivity {
     private FirebaseFirestore db;
     private RelativeLayout loaderLayout;
     private String photoUrl = null;
+    private int point = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +91,9 @@ public class profileActivity extends BasicActivity {
                                 ((EditText) findViewById(R.id.editText_nickname)).setText(document.getData().get("nickname").toString());
                                 ((EditText) findViewById(R.id.editText_telephone)).setText(document.getData().get("telephone").toString());
                                 ((EditText) findViewById(R.id.editText_address)).setText(document.getData().get("address").toString());
+                                if(document.getData().get("point") != null) {
+                                    point = ((Long)document.getData().get("point")).intValue();
+                                }
                             }
                         }
                     } else {
@@ -188,7 +192,7 @@ public class profileActivity extends BasicActivity {
 
             // 사진을 입력하지 않았을 경우 기존 저장되있던 사진이 올라감 없었으면 null 있으면 pictureUrl
             if(profilePath == null) {
-                MemberInfo memberInfo = new MemberInfo(nickname, address, telephone, photoUrl);
+                MemberInfo memberInfo = new MemberInfo(nickname, address, telephone, photoUrl, point);
                 uploader(memberInfo);
                 loaderLayout.setVisibility(View.GONE);
                 showToast(profileActivity.this, "회원 정보 변경에 성공하셨습니다");
@@ -211,7 +215,7 @@ public class profileActivity extends BasicActivity {
                         public void onComplete(@NonNull Task<Uri> task) {
                             if (task.isSuccessful()) {
                                 Uri downloadUri = task.getResult();
-                                MemberInfo memberInfo = new MemberInfo(nickname, address, telephone, downloadUri.toString());
+                                MemberInfo memberInfo = new MemberInfo(nickname, address, telephone, downloadUri.toString(), point);
                                 uploader(memberInfo);
                                 loaderLayout.setVisibility(View.GONE);
                                 showToast(profileActivity.this, "회원 정보 변경에 성공하셨습니다");

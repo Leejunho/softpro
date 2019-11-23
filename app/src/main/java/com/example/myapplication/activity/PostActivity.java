@@ -12,10 +12,14 @@ import androidx.annotation.NonNull;
 
 import com.example.myapplication.PostInfo;
 import com.example.myapplication.R;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
@@ -30,6 +34,7 @@ public class PostActivity extends BasicActivity {
     private TextView textView_title;
     private TextView textView_contents;
     private TextView createdAtTextView;
+    private TextView textView_point;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +49,7 @@ public class PostActivity extends BasicActivity {
 
 
         findViewById(R.id.menu).setOnClickListener(onClickListener);
+        findViewById(R.id.button_send).setOnClickListener(onClickListener);
 
         setTextinvalues();
 
@@ -51,21 +57,17 @@ public class PostActivity extends BasicActivity {
     }
 
     private void setTextinvalues() {
-        // 게시글 제목
-        textView_title = findViewById(R.id.TextView_title);
+        // 게시글 물품제목
+        textView_title = findViewById(R.id.textView_title);
         textView_title.setText(postInfo.getTitle());
 
-        // 게시글 물품
-        textView_contents = findViewById(R.id.textView_item_name);
-        textView_contents.setText("물품: " + postInfo.getItem_name());
-
         // 게시글 제안금액
-        textView_contents = findViewById(R.id.textView_price);
-        textView_contents.setText("제안금액: " + postInfo.getPrice());
+        textView_contents = findViewById(R.id.editText_price);
+        textView_contents.setText(String.valueOf(postInfo.getPrice()));
 
         // 게시글 기간
-        textView_contents = findViewById(R.id.textView_term);
-        textView_contents.setText("기간: ~" + postInfo.getTerm());
+        textView_contents = findViewById(R.id.editText_term);
+        textView_contents.setText(postInfo.getTerm() + "까지");
 
         // 게시글 내용
         textView_contents = findViewById(R.id.textView_contents);
@@ -73,21 +75,52 @@ public class PostActivity extends BasicActivity {
 
         // 게시글 올린 날짜
         createdAtTextView = findViewById(R.id.textView_createdAt);
-        createdAtTextView.setText(new SimpleDateFormat("yyyy-MM-dd HH:mm 작성", Locale.getDefault()).format(postInfo.getCreatedAt()));
+        createdAtTextView.setText(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss 작성", Locale.getDefault()).format(postInfo.getCreatedAt()));
+
+        // 거래점수
+        textView_point = findViewById(R.id.textView_point);
+        DocumentReference documentReference = db.collection("users").document(postInfo.getPublisher());
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document != null) {
+                        if (document.exists()) {
+                            if(document.getData().get("point") != null) {
+                                textView_point.setText(document.getData().get("point").toString() +"점");
+                            }
+                        }
+                    }
+                }
+            }
+        });
     }
 
     public void checkauthority() {
-        if(user.getUid().equals(postInfo.getPublisher())) {
-            // 게시글의 작성자는 수정 삭제 가능
+        if(user.getUid().equals("1R5r4L6O1PeA4h93RrCNYK4zQzS2") || user.getUid().equals("4cuaqNgeOCaun6dxrakLdRTkDpj1") || user.getUid().equals("T8oDzbNpoUYKd77AycscZU3bXry1"))  {
+            // 관리자 GM
+            // 모든 글 수정 삭제 가능
             findViewById(R.id.menu).setVisibility(View.VISIBLE);
+
+            // 입수신청 버튼이 사용가능
+            findViewById(R.id.button_send).setVisibility(View.VISIBLE);
         }
-        else if(user.getUid().equals("1R5r4L6O1PeA4h93RrCNYK4zQzS2") || user.getUid().equals("4cuaqNgeOCaun6dxrakLdRTkDpj1") || user.getUid().equals("T8oDzbNpoUYKd77AycscZU3bXry1"))  {
-            // 관리자의 경우 모든 글 수정 삭제 가능
+        else if(user.getUid().equals(postInfo.getPublisher())) {
+            // 게시글의 작성자PostAdapter
+            // 수정 삭제 가능
             findViewById(R.id.menu).setVisibility(View.VISIBLE);
+
+            // 입수신청 버튼이 사용불가
+            findViewById(R.id.button_send).setVisibility(View.GONE);
         }
         else {
-            // 자신의 게시글이 아니라면 수정 삭제 불가능하도록 View gone
+            // 자신의 게시글이 아닌사람
+            // 수정 삭제 불가능하도록 View gone
             findViewById(R.id.menu).setVisibility(View.GONE);
+
+            // 입수신청 버튼이 사용가능
+            findViewById(R.id.button_send).setVisibility(View.VISIBLE);
         }
     }
 
@@ -104,6 +137,10 @@ public class PostActivity extends BasicActivity {
                 case R.id.menu:  // 점3개 메뉴 버튼 클릭했을때 동작
                     showPopup(v);
                     break;
+
+                case R.id.button_send:  // 입수신청 메뉴 버튼 클릭했을때 동작
+                    myStartActivity(CheckpostActivity.class, postInfo);
+                    break;
             }
         }
     };
@@ -113,10 +150,12 @@ public class PostActivity extends BasicActivity {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case 0:
-                postInfo = (PostInfo)data.getSerializableExtra("postInfo");
+                if(data != null) {
+                    postInfo = (PostInfo) data.getSerializableExtra("postInfo");
 
-                // 수정한 내용이 보이도록 새로 갱신
-                setTextinvalues();
+                    // 수정한 내용이 보이도록 새로 갱신
+                    setTextinvalues();
+                }
                 break;
         }
     }
@@ -135,7 +174,7 @@ public class PostActivity extends BasicActivity {
             public boolean onMenuItemClick(MenuItem menuItem) {
                 //각 메뉴별 아이디를 조사한후 할일을 적어줌
                 switch(menuItem.getItemId()){
-                    case R.id.modify:
+                    case R.id.notify:
                         // 수정
                         myStartActivity(WritePostActivity.class, postInfo);
                         break;

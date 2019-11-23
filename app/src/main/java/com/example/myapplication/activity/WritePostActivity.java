@@ -31,6 +31,7 @@ public class WritePostActivity extends BasicActivity {
         setContentView(R.layout.activity_write_post);
 
         findViewById(R.id.button_send).setOnClickListener(onClickListener);
+        findViewById(R.id.button_cancel).setOnClickListener(onClickListener);
 
         loaderLayout = findViewById(R.id.loaderLayout);
 
@@ -42,21 +43,26 @@ public class WritePostActivity extends BasicActivity {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.button_send:  // 등록 버튼 클릭했을때 동작
+                case R.id.button_send:  // 입수등록 버튼 클릭했을때 동작
                     post_add();
+                    break;
+
+                case R.id.button_cancel:  // 등록취소 버튼 클릭했을때 동작
+                    finish();
                     break;
             }
         }
     };
 
     private void post_add() {
-        final String title = ((EditText) findViewById(R.id.editText_title)).getText().toString();            // 제목
-        final String item_name = ((EditText) findViewById(R.id.editText_item_name)).getText().toString();    // 물품명
-        final String price = ((EditText) findViewById(R.id.editText_price)).getText().toString();            // 가격
-        final String term = ((EditText) findViewById(R.id.editText_term)).getText().toString();              // 기간
-        final String contents = ((EditText) findViewById(R.id.editText_contents)).getText().toString();      // 내용
+        final String title = ((EditText) findViewById(R.id.textView_title)).getText().toString();            // 물품제목
+        String p = ((EditText) findViewById(R.id.textView_price)).getText().toString();
+        final int price = Integer.parseInt(p);                                                               // 가격
+        final String term = ((EditText) findViewById(R.id.textView_term)).getText().toString();              // 기간
+        final String contents = ((EditText) findViewById(R.id.textView_contents)).getText().toString();      // 내용
+        int viewCount = 0;
 
-        if (title.length() > 0 && item_name.length() > 0 && price.length() > 0 && term.length() > 0) {
+        if (title.length() > 0 && price >= 0 && term.length() > 0) {
             loaderLayout.setVisibility(View.VISIBLE);
             user = FirebaseAuth.getInstance().getCurrentUser();
             db = FirebaseFirestore.getInstance();
@@ -68,8 +74,13 @@ public class WritePostActivity extends BasicActivity {
             if (contents.length() == 0) {
                 postInfo.setContents("내용없음");
             }
+
+            if(postInfo != null) {
+                viewCount = postInfo.getViewCount();
+            }
+
             // db 저장 함수
-            uploader(documentReference, new PostInfo(title, item_name, price, term, contents, user.getUid(), new Date()));
+            uploader(documentReference, new PostInfo(title, price, term, contents, user.getUid(), new Date(), viewCount));
         } else {
             showToast(WritePostActivity.this, "정보를 입력해 주세요");
         }
@@ -100,11 +111,10 @@ public class WritePostActivity extends BasicActivity {
 
     private void postInit() {
         if(postInfo != null) {
-            ((EditText) findViewById(R.id.editText_title)).setText(postInfo.getTitle());
-            ((EditText) findViewById(R.id.editText_item_name)).setText(postInfo.getItem_name());
-            ((EditText) findViewById(R.id.editText_price)).setText(postInfo.getPrice());
-            ((EditText) findViewById(R.id.editText_term)).setText(postInfo.getTerm());
-            ((EditText) findViewById(R.id.editText_contents)).setText(postInfo.getContents());
+            ((EditText) findViewById(R.id.textView_title)).setText(postInfo.getTitle());
+            ((EditText) findViewById(R.id.textView_price)).setText(String.valueOf(postInfo.getPrice()));
+            ((EditText) findViewById(R.id.textView_term)).setText(postInfo.getTerm());
+            ((EditText) findViewById(R.id.textView_contents)).setText(postInfo.getContents());
         }
     }
 }

@@ -23,6 +23,7 @@ public class MainActivity extends BasicActivity {
     private FirebaseFirestore db;
     private FirebaseUser user;
     private TextView textView_nickname;
+    private TextView textView_point;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +35,7 @@ public class MainActivity extends BasicActivity {
         findViewById(R.id.button_note).setOnClickListener(onClickListener);
         findViewById(R.id.button_profile).setOnClickListener(onClickListener);
         textView_nickname = (TextView) findViewById(R.id.textView_usernickname) ;
+        textView_point = (TextView) findViewById(R.id.textView_point) ;
         user = FirebaseAuth.getInstance().getCurrentUser();
         db = FirebaseFirestore.getInstance();
 
@@ -45,15 +47,15 @@ public class MainActivity extends BasicActivity {
         public void onClick(View v) {
             switch(v.getId()) {
                 case R.id.button_delivery:  // 택배현황 버튼 클릭했을때 동작
-                    myStartActivity(delivery_status.class);
+                    myStartActivity(DeliverystatusActivity.class);
                     break;
 
                 case R.id.button_board:  // 게시판 버튼 클릭했을때 동작
-                    myStartActivity(notice_board.class);
+                    myStartActivity(NoticeboardActivity.class);
                     break;
 
                 case R.id.button_note:  // 쪽지함 버튼 클릭했을때 동작
-                    myStartActivity(notice_box.class);
+                    myStartActivity(NoticeboxActivity.class);
                     break;
 
                 case R.id.button_profile:  // 회원정보 버튼 클릭했을때 동작
@@ -77,8 +79,11 @@ public class MainActivity extends BasicActivity {
                         if (document != null) {
                             if (document.exists()) {
                                 textView_nickname.setText(document.getData().get("nickname").toString() + "님 반갑습니다");
+                                if(document.getData().get("point") != null) {
+                                    textView_point.setText("거래점수: " + document.getData().get("point").toString() +"점");
+                                }
                             } else {
-                                myStartActivity(addinfo.class);
+                                myStartActivity(AddinfoActivity.class);
                                 finish();
                                 showToast(MainActivity.this,"회원정보를 추가입력해주세요");
                             }

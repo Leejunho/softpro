@@ -1,67 +1,244 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
-
+    xmlns:tools="http://schemas.android.com/tools">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="50dp">
+        android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/editText_title"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:layout_weight="3.5"
+                    android:text="맡깁니다"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textView9"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="0dp"
+                    android:layout_weight="1"
+                    android:text="등록"
+                    android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="8px"
+            android:layout_marginBottom="40dp"
+            android:background="@color/colorPrimaryDark" />
+
+        <TextView
+            android:id="@+id/textView5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="제목"
-            android:inputType="textPersonName" />
+            android:layout_marginBottom="10dp"
+            android:paddingStart="2dp"
+            android:text="물품정보"
+            android:textColor="@color/common_google_signin_btn_text_dark_focused"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/editText_item_name"
+        <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="물품명"
-            android:inputType="textPersonName" />
+            android:layout_height="2px"
+            android:background="@color/colorPrimaryDark" />
 
-        <EditText
-            android:id="@+id/editText_price"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="제안금액"
-            android:inputType="number" />
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/editText_term"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="기간"
-            android:inputType="date" />
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="80dp"
+                android:layout_height="60dp"
+                android:layout_weight="0"
+                android:background="#E2E6FC"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="물품제목"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/editText_contents"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:gravity="start|top"
-            android:hint="내용"
-            android:inputType="textMultiLine"
-            android:lines="10" />
+            <EditText
+                android:id="@+id/textView_title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:gravity="center_vertical"
+                android:paddingStart="5dp"
+                android:ems="10"
+                android:inputType="textPersonName"/>
 
-        <Button
-            android:id="@+id/button_send"
+        </LinearLayout>
+
+        <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="등록" />
+            android:layout_height="2px"
+            android:background="@color/colorPrimaryDark" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="80dp"
+                android:layout_height="50dp"
+                android:layout_weight="0"
+                android:background="#E2E6FC"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="제안금액"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/textView_price"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:gravity="center_vertical"
+                android:paddingStart="5dp"
+                android:ems="10"
+                android:inputType="number"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/colorPrimaryDark" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView120"
+                android:layout_width="80dp"
+                android:layout_height="50dp"
+                android:layout_weight="0"
+                android:background="#E2E6FC"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="기간"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/textView_term"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:gravity="center_vertical"
+                android:paddingStart="5dp"
+                android:ems="10"
+                android:inputType="textPersonName"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/colorPrimaryDark" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView121"
+                android:layout_width="80dp"
+                android:layout_height="170dp"
+                android:background="#E2E6FC"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="내용"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/textView_contents"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:gravity="center_vertical"
+                android:paddingStart="5dp"
+                android:ems="10"
+                android:inputType="textPersonName"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:layout_marginBottom="50dp"
+            android:background="@color/colorPrimaryDark" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="100dp"
+            android:orientation="horizontal"
+            android:paddingStart="60dp"
+            android:paddingEnd="60dp">
+
+            <Button
+                android:id="@+id/button_send"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginRight="30dp"
+                android:layout_weight="1"
+                android:background="@color/colorPrimaryDark"
+                android:shadowColor="@color/colorPrimary"
+                android:text="물품 등록"
+                android:textColor="@color/common_google_signin_btn_text_dark_default" />
+
+            <Button
+                android:id="@+id/button_cancel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginStart="30dp"
+                android:layout_weight="1"
+                android:background="#6E6F7A"
+                android:shadowColor="@color/colorPrimary"
+                android:text="등록 취소"
+                android:textColor="@color/common_google_signin_btn_text_dark_default" />
+
+        </LinearLayout>
+
+        <include
+            layout="@layout/view_loader"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"/>
+
     </LinearLayout>
-
-    <include
-        layout="@layout/view_loader"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"/>
-</RelativeLayout>
+</ScrollView>
