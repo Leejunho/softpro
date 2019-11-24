@@ -351,6 +351,14 @@
             android:layout_height="2px"
             android:background="@color/colorPrimaryDark" />
 
+        <TextView
+            android:id="@+id/textView13"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="개인정보 잘못 기재 시 향후 불이익이 발생하실 수 있습니다"
+            android:textColor="#FF0000" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"

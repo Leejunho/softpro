@@ -2,17 +2,23 @@ package com.example.myapplication.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.telephony.PhoneNumberUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import com.example.myapplication.R;
 import com.example.myapplication.PostInfo;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Date;
@@ -25,18 +31,36 @@ public class WritePostActivity extends BasicActivity {
     private RelativeLayout loaderLayout;
     private PostInfo postInfo;
 
+    private TextView textView_nickname;
+    private TextView textView_telephone;
+    private TextView textView_address;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_write_post);
 
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        db = FirebaseFirestore.getInstance();
+
         findViewById(R.id.button_send).setOnClickListener(onClickListener);
         findViewById(R.id.button_cancel).setOnClickListener(onClickListener);
+        findViewById(R.id.button_editprofile).setOnClickListener(onClickListener);
+
+        textView_nickname = (TextView) findViewById(R.id.textView_nickname) ;
+        textView_telephone = (TextView) findViewById(R.id.textView_telephone) ;
+        textView_address = (TextView) findViewById(R.id.textView_address) ;
 
         loaderLayout = findViewById(R.id.loaderLayout);
 
         postInfo = (PostInfo)getIntent().getSerializableExtra("postInfo");
         postInit();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        userInit();
     }
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -49,6 +73,10 @@ public class WritePostActivity extends BasicActivity {
 
                 case R.id.button_cancel:  // 등록취소 버튼 클릭했을때 동작
                     finish();
+                    break;
+
+                case R.id.button_editprofile:  // 개인정보수정 버튼 클릭했을때 동작
+                    myStartActivity(profileActivity.class);
                     break;
             }
         }
@@ -116,5 +144,36 @@ public class WritePostActivity extends BasicActivity {
             ((EditText) findViewById(R.id.textView_term)).setText(postInfo.getTerm());
             ((EditText) findViewById(R.id.textView_contents)).setText(postInfo.getContents());
         }
+    }
+
+    private void userInit() {
+        if(user != null) {
+            DocumentReference documentReference = db.collection("users").document(user.getUid());
+            documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document != null) {
+                            if (document.exists()) {
+                                textView_nickname.setText(document.getData().get("nickname").toString());
+                                textView_telephone.setText(document.getData().get("telephone").toString());
+                                //String formattingNumber = PhoneNumberUtils.formatNumber("010123454567");
+                                textView_address.setText(document.getData().get("address").toString());
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        else {
+            showToast(WritePostActivity.this, "잘못된 접근입니다.");
+            finish();
+        }
+    }
+
+    private void myStartActivity(Class c) {
+        Intent intent = new Intent(this, c);
+        startActivity(intent);
     }
 }

@@ -76,7 +76,7 @@
             <TextView
                 android:id="@+id/textView10"
                 android:layout_width="80dp"
-                android:layout_height="60dp"
+                android:layout_height="match_parent"
                 android:layout_weight="0"
                 android:background="#E2E6FC"
                 android:gravity="center_horizontal|center_vertical"
@@ -87,12 +87,16 @@
             <EditText
                 android:id="@+id/textView_title"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:gravity="center_vertical"
-                android:paddingStart="5dp"
                 android:ems="10"
-                android:inputType="textPersonName"/>
+                android:gravity="center_vertical"
+                android:inputType="textPersonName"
+                android:paddingStart="5dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                tools:text="김치" />
 
         </LinearLayout>
 
@@ -109,7 +113,7 @@
             <TextView
                 android:id="@+id/textView12"
                 android:layout_width="80dp"
-                android:layout_height="50dp"
+                android:layout_height="match_parent"
                 android:layout_weight="0"
                 android:background="#E2E6FC"
                 android:gravity="center_horizontal|center_vertical"
@@ -120,12 +124,15 @@
             <EditText
                 android:id="@+id/textView_price"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:gravity="center_vertical"
-                android:paddingStart="5dp"
                 android:ems="10"
-                android:inputType="number"/>
+                android:gravity="center_vertical"
+                android:inputType="number"
+                android:paddingStart="5dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused" />
 
         </LinearLayout>
 
@@ -142,7 +149,7 @@
             <TextView
                 android:id="@+id/textView120"
                 android:layout_width="80dp"
-                android:layout_height="50dp"
+                android:layout_height="match_parent"
                 android:layout_weight="0"
                 android:background="#E2E6FC"
                 android:gravity="center_horizontal|center_vertical"
@@ -153,12 +160,15 @@
             <EditText
                 android:id="@+id/textView_term"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:gravity="center_vertical"
-                android:paddingStart="5dp"
                 android:ems="10"
-                android:inputType="textPersonName"/>
+                android:gravity="center_vertical"
+                android:inputType="textPersonName"
+                android:paddingStart="5dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused" />
 
         </LinearLayout>
 
@@ -175,7 +185,7 @@
             <TextView
                 android:id="@+id/textView121"
                 android:layout_width="80dp"
-                android:layout_height="170dp"
+                android:layout_height="match_parent"
                 android:background="#E2E6FC"
                 android:gravity="center_horizontal|center_vertical"
                 android:text="내용"
@@ -185,12 +195,15 @@
             <EditText
                 android:id="@+id/textView_contents"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="100dp"
                 android:background="@android:color/transparent"
-                android:gravity="center_vertical"
-                android:paddingStart="5dp"
                 android:ems="10"
-                android:inputType="textPersonName"/>
+                android:gravity="center_vertical"
+                android:inputType="textPersonName"
+                android:paddingStart="5dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused" />
 
         </LinearLayout>
 
@@ -198,6 +211,138 @@
             android:layout_width="match_parent"
             android:layout_height="2px"
             android:layout_marginBottom="50dp"
+            android:background="@color/colorPrimaryDark" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView18"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1"
+                android:paddingStart="2dp"
+                android:text="내 거래정보"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/button_editprofile"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:background="@drawable/button_button01"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:text="개인정보 수정 >"
+                android:textStyle="italic" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/colorPrimaryDark" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView101"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
+                android:background="#E2E6FC"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="닉네임"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView_nickname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingStart="5dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                tools:text="이세돌" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/colorPrimaryDark" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView112"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
+                android:background="#E2E6FC"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="연락처"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView_telephone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingStart="5dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                tools:text="01012345678" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/colorPrimaryDark" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView133"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
+                android:background="#E2E6FC"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="주소"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingStart="5dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                tools:text="부산광역시 서구 하단2동 구덕로 225 동아대학교 부민캠퍼스" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
             android:background="@color/colorPrimaryDark" />
 
         <LinearLayout

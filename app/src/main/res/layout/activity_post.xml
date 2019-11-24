@@ -88,7 +88,7 @@
                 android:paddingStart="5dp"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
-                tools:text="김치" />
+                tools:text="김치 맡아주세요" />
 
         </LinearLayout>
 
@@ -118,7 +118,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:paddingStart="5dp" />
+                android:paddingStart="5dp"
+                tools:text="20000원" />
 
         </LinearLayout>
 
@@ -148,7 +149,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:paddingStart="5dp" />
+                android:paddingStart="5dp"
+                tools:text="2019-11-24 11:02:35 등록" />
 
         </LinearLayout>
 
@@ -178,7 +180,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:paddingStart="5dp" />
+                android:paddingStart="5dp"
+                tools:text="11/30 오후 6:00 까지" />
 
         </LinearLayout>
 
@@ -211,7 +214,7 @@
                 android:paddingStart="5dp"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
-                tools:text="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" />
+                tools:text="테스트 내용입니다.  테스트 내용입니다.  테스트 내용입니다.  테스트 내용입니다.  테스트 내용입니다.  테스트 내용입니다.  테스트 내용입니다.  테스트 내용입니다. " />
 
         </LinearLayout>
 
@@ -259,7 +262,8 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:paddingStart="5dp"
-                android:textColor="@color/common_google_signin_btn_text_dark_focused" />
+                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                tools:text="0점" />
 
         </LinearLayout>
 
@@ -278,6 +282,14 @@
             android:shadowColor="@color/colorPrimary"
             android:text="입수 신청"
             android:textColor="@color/common_google_signin_btn_text_dark_default" />
+
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:paddingTop="130dp"
+            android:text="거래점수는 거래 건당 1점 씩 증가합니다" />
 
         <include
             layout="@layout/view_loader"
