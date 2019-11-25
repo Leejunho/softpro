@@ -20,7 +20,6 @@
         <activity android:name=".activity.reset_password"/>
         <activity android:name=".activity.profileActivity" />
         <activity android:name=".activity.AddinfoActivity" />
-        <activity android:name=".activity.NoticeboxActivity" />
         <activity android:name=".activity.NoticeboardActivity" />
         <activity android:name=".activity.DeliverystatusActivity" />
         <activity android:name=".activity.SignUpActivity" />
@@ -31,6 +30,9 @@
         <activity android:name=".activity.WritePostActivity" />
         <activity android:name=".activity.PostActivity" />
         <activity android:name=".activity.CheckpostActivity" />
+        <activity android:name=".activity.ChatRoomActivity" />
+        <activity android:name=".activity.ChatActivity" />
+        <activity android:name=".activity.SelectUserActivity" />
         <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

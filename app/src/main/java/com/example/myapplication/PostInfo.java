@@ -15,8 +15,10 @@ public class PostInfo implements Serializable {
     private Date createdAt;
     private String id;
     private int viewCount;
+    private String consumer;
 
-    public PostInfo(String title, int price, String term, String contents, String publisher, Date createdAt, String id, int viewCount) {
+
+    public PostInfo(String title, int price, String term, String contents, String publisher, Date createdAt, String id, int viewCount, String consumer) {
         this.title = title;
         this.price = price;
         this.term = term;
@@ -25,9 +27,10 @@ public class PostInfo implements Serializable {
         this.createdAt = createdAt;
         this.id = id;
         this.viewCount = viewCount;
+        this.consumer = consumer;
     }
 
-    public PostInfo(String title, int price, String term, String contents, String publisher, Date createdAt, int viewCount) {
+    public PostInfo(String title, int price, String term, String contents, String publisher, Date createdAt, int viewCount, String consumer) {
         this.title = title;
         this.price = price;
         this.term = term;
@@ -35,6 +38,7 @@ public class PostInfo implements Serializable {
         this.publisher = publisher;
         this.createdAt = createdAt;
         this.viewCount = viewCount;
+        this.consumer = consumer;
     }
 
     public Map<String, Object> getPostInfo() {
@@ -46,6 +50,7 @@ public class PostInfo implements Serializable {
         docData.put("publisher", publisher);
         docData.put("createdAt", createdAt);
         docData.put("viewCount", viewCount);
+        docData.put("consumer", consumer);
         return docData;
     }
 
@@ -103,5 +108,12 @@ public class PostInfo implements Serializable {
     }
     public void setViewCount(int viewCount) {
         this.viewCount = viewCount;
+    }
+
+    public String getConsumer() {
+        return this.consumer;
+    }
+    public void setConsumer(String consumer) {
+        this.consumer = consumer;
     }
 }

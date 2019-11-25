@@ -3,6 +3,7 @@ package com.example.myapplication.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.PhoneNumberUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -85,11 +86,15 @@ public class WritePostActivity extends BasicActivity {
     private void post_add() {
         final String title = ((EditText) findViewById(R.id.textView_title)).getText().toString();            // 물품제목
         String p = ((EditText) findViewById(R.id.textView_price)).getText().toString();
+        if(p.length() < 0) {
+            Log.d(String.valueOf(p.length()), "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ");
+            showToast(WritePostActivity.this, "정보를 입력해 주세요");
+            return;
+        }
         final int price = Integer.parseInt(p);                                                               // 가격
         final String term = ((EditText) findViewById(R.id.textView_term)).getText().toString();              // 기간
         final String contents = ((EditText) findViewById(R.id.textView_contents)).getText().toString();      // 내용
         int viewCount = 0;
-
         if (title.length() > 0 && price >= 0 && term.length() > 0) {
             loaderLayout.setVisibility(View.VISIBLE);
             user = FirebaseAuth.getInstance().getCurrentUser();
@@ -108,7 +113,7 @@ public class WritePostActivity extends BasicActivity {
             }
 
             // db 저장 함수
-            uploader(documentReference, new PostInfo(title, price, term, contents, user.getUid(), new Date(), viewCount));
+            uploader(documentReference, new PostInfo(title, price, term, contents, user.getUid(), new Date(), viewCount, ""));
         } else {
             showToast(WritePostActivity.this, "정보를 입력해 주세요");
         }

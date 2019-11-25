@@ -86,8 +86,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:paddingStart="5dp"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
                 tools:text="김치 맡아주세요" />
 
         </LinearLayout>
@@ -105,7 +105,7 @@
             <TextView
                 android:id="@+id/textView12"
                 android:layout_width="80dp"
-                android:layout_height="30dp"
+                android:layout_height="match_parent"
                 android:layout_weight="0"
                 android:background="#E2E6FC"
                 android:gravity="center_horizontal|center_vertical"
@@ -119,6 +119,8 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:paddingStart="5dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
                 tools:text="20000원" />
 
         </LinearLayout>
@@ -136,7 +138,7 @@
             <TextView
                 android:id="@+id/textView14"
                 android:layout_width="80dp"
-                android:layout_height="30dp"
+                android:layout_height="match_parent"
                 android:layout_weight="0"
                 android:background="#E2E6FC"
                 android:gravity="center_horizontal|center_vertical"
@@ -150,6 +152,8 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:paddingStart="5dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
                 tools:text="2019-11-24 11:02:35 등록" />
 
         </LinearLayout>
@@ -167,7 +171,7 @@
             <TextView
                 android:id="@+id/textView120"
                 android:layout_width="80dp"
-                android:layout_height="30dp"
+                android:layout_height="match_parent"
                 android:layout_weight="0"
                 android:background="#E2E6FC"
                 android:gravity="center_horizontal|center_vertical"
@@ -181,6 +185,8 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:paddingStart="5dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
                 tools:text="11/30 오후 6:00 까지" />
 
         </LinearLayout>
@@ -212,8 +218,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:paddingStart="5dp"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
                 tools:text="테스트 내용입니다.  테스트 내용입니다.  테스트 내용입니다.  테스트 내용입니다.  테스트 내용입니다.  테스트 내용입니다.  테스트 내용입니다.  테스트 내용입니다. " />
 
         </LinearLayout>
@@ -272,6 +278,14 @@
             android:layout_height="2px"
             android:background="@color/colorPrimaryDark" />
 
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="거래점수는 거래 건당 1점 씩 증가합니다"
+            android:textColor="#AAAAAA" />
+
         <Button
             android:id="@+id/button_send"
             android:layout_width="100dp"
@@ -282,14 +296,6 @@
             android:shadowColor="@color/colorPrimary"
             android:text="입수 신청"
             android:textColor="@color/common_google_signin_btn_text_dark_default" />
-
-        <TextView
-            android:id="@+id/textView15"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:paddingTop="130dp"
-            android:text="거래점수는 거래 건당 1점 씩 증가합니다" />
 
         <include
             layout="@layout/view_loader"

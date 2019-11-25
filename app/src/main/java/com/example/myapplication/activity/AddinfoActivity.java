@@ -14,6 +14,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 
 import static com.example.myapplication.Util.showToast;
@@ -60,7 +61,7 @@ public class AddinfoActivity extends BasicActivity {
             FirebaseStorage storage = FirebaseStorage.getInstance();
             user = FirebaseAuth.getInstance().getCurrentUser();
 
-            MemberInfo memberInfo = new MemberInfo(nickname, address, telephone, 0);
+            MemberInfo memberInfo = new MemberInfo(nickname, address, telephone, 0, user.getUid(), "...", FirebaseInstanceId.getInstance().getToken());
             uploader(memberInfo);
         }
         else {

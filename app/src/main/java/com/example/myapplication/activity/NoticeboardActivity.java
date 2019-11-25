@@ -95,7 +95,8 @@ public class NoticeboardActivity extends BasicActivity {
                                             document.getData().get("publisher").toString(),
                                             new Date(document.getDate("createdAt").getTime()),
                                             document.getId(),
-                                            ((Long)document.getData().get("viewCount")).intValue()
+                                            ((Long)document.getData().get("viewCount")).intValue(),
+                                            document.getData().get("consumer").toString()
                                     ));
                                 }
                                 postAdapter.notifyDataSetChanged();

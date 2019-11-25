@@ -11,7 +11,10 @@ import androidx.annotation.NonNull;
 
 import com.example.myapplication.PostInfo;
 import com.example.myapplication.R;
+import com.example.myapplication.fragment.ChatRoomFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -20,6 +23,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 import static com.example.myapplication.Util.showToast;
@@ -69,6 +73,13 @@ public class CheckpostActivity extends BasicActivity {
             switch(v.getId()) {
                 case R.id.button_send:  // 최종입수하기 버튼 클릭했을때 동작
                     // 준영 채팅창 넣을 곳
+                    myStartActivity(SelectUserActivity.class, postInfo);
+                    if(postInfo != null) {
+                        // consumer에 입수등록한 사람의 uid를 넣음
+                        final DocumentReference documentReference =  db.collection("posts").document(postInfo.getId());
+                        uploader(documentReference, new PostInfo(postInfo.getTitle(), postInfo.getPrice(), postInfo.getTerm(), postInfo.getContents(), postInfo.getPublisher(), postInfo.getCreatedAt(), postInfo.getViewCount(), user.getUid()));
+                    }
+                    finish();
                     break;
 
                 case R.id.button_cancel:  // 취소하기 버튼 클릭했을때 동작
@@ -81,6 +92,22 @@ public class CheckpostActivity extends BasicActivity {
             }
         }
     };
+
+    private void uploader(DocumentReference documentReference, final PostInfo postInfo) {
+        documentReference.set(postInfo.getPostInfo())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        showToast(CheckpostActivity.this,"거래를 신청하셨습니다");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        showToast(CheckpostActivity.this,"거래 신청에 실패하셨습니다");
+                    }
+                });
+    }
 
     private void postInit() {
         if(postInfo != null) {
@@ -129,5 +156,11 @@ public class CheckpostActivity extends BasicActivity {
     private void myStartActivity(Class c) {
         Intent intent = new Intent(this, c);
         startActivity(intent);
+    }
+
+    private void myStartActivity(Class c, PostInfo postInfo) {
+        Intent intent = new Intent(this, c);
+        intent.putExtra("postInfo", postInfo);
+        startActivityForResult(intent, 0);
     }
 }

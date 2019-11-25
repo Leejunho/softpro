@@ -106,6 +106,13 @@ public class PostActivity extends BasicActivity {
             // 입수신청 버튼이 사용가능
             findViewById(R.id.button_send).setVisibility(View.VISIBLE);
         }
+        else if(!postInfo.getConsumer().equals("")) {
+            // 거래 진행 중
+            showToast(PostActivity.this, "거래가 진행중입니다");
+
+            // 입수신청 버튼이 사용불가
+            findViewById(R.id.button_send).setVisibility(View.GONE);
+        }
         else if(user.getUid().equals(postInfo.getPublisher())) {
             // 게시글의 작성자PostAdapter
             // 수정 삭제 가능

@@ -30,6 +30,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -192,7 +193,7 @@ public class profileActivity extends BasicActivity {
 
             // 사진을 입력하지 않았을 경우 기존 저장되있던 사진이 올라감 없었으면 null 있으면 pictureUrl
             if(profilePath == null) {
-                MemberInfo memberInfo = new MemberInfo(nickname, address, telephone, photoUrl, point);
+                MemberInfo memberInfo = new MemberInfo(nickname, address, telephone, photoUrl, point, user.getUid(), "...", FirebaseInstanceId.getInstance().getToken());
                 uploader(memberInfo);
                 loaderLayout.setVisibility(View.GONE);
                 showToast(profileActivity.this, "회원 정보 변경에 성공하셨습니다");
@@ -215,7 +216,7 @@ public class profileActivity extends BasicActivity {
                         public void onComplete(@NonNull Task<Uri> task) {
                             if (task.isSuccessful()) {
                                 Uri downloadUri = task.getResult();
-                                MemberInfo memberInfo = new MemberInfo(nickname, address, telephone, downloadUri.toString(), point);
+                                MemberInfo memberInfo = new MemberInfo(nickname, address, telephone, downloadUri.toString(), point, user.getUid(), "...", FirebaseInstanceId.getInstance().getToken());
                                 uploader(memberInfo);
                                 loaderLayout.setVisibility(View.GONE);
                                 showToast(profileActivity.this, "회원 정보 변경에 성공하셨습니다");

@@ -55,7 +55,7 @@ public class MainActivity extends BasicActivity {
                     break;
 
                 case R.id.button_note:  // 쪽지함 버튼 클릭했을때 동작
-                    myStartActivity(NoticeboxActivity.class);
+                    myStartActivity(ChatRoomActivity.class);
                     break;
 
                 case R.id.button_profile:  // 회원정보 버튼 클릭했을때 동작

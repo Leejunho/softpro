@@ -50,10 +50,6 @@ public class LoginActivity extends BasicActivity {
 
         loaderLayout = findViewById(R.id.loaderLayout);
 
-        Toolbar tb = (Toolbar) findViewById(R.id.toolbar_s);
-        tb.setTitle(R.string.toolbar_s);
-        setSupportActionBar(tb);
-
         mAuth = FirebaseAuth.getInstance(); // 인스턴스 생성
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

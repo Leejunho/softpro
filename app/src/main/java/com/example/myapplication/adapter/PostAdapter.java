@@ -85,7 +85,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
         final DocumentReference documentReference = postInfo == null ? db.collection("posts").document() : db.collection("posts").document(postInfo.getId());
         // db 저장 함수
-        uploader(documentReference, new PostInfo(postInfo.getTitle(), postInfo.getPrice(), postInfo.getTerm(), postInfo.getContents(), postInfo.getPublisher(), postInfo.getCreatedAt(), postInfo.getViewCount()+1));
+        uploader(documentReference, new PostInfo(postInfo.getTitle(), postInfo.getPrice(), postInfo.getTerm(), postInfo.getContents(), postInfo.getPublisher(), postInfo.getCreatedAt(), postInfo.getViewCount()+1, postInfo.getConsumer()));
     }
 
     private void uploader(DocumentReference documentReference, final PostInfo postInfo) {
@@ -125,8 +125,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         createdAtTextView.setText(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(mDataset.get(position).getCreatedAt()));
 
         // 게시글 조회수
-        TextView textView_viewCount = cardView.findViewById(R.id.textView_viewCount);
-        textView_viewCount.setText("조회수 " + String.valueOf(mDataset.get(position).getViewCount()));
+        //TextView textView_viewCount = cardView.findViewById(R.id.textView_viewCount);
+        //textView_viewCount.setText("조회수 " + String.valueOf(mDataset.get(position).getViewCount()));
 
         // 게시글 작성자 프로필 이미지
         final ImageView profileImageView = cardView.findViewById(R.id.imageView_profile);
