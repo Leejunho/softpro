@@ -92,6 +92,7 @@ public class DeliverystatusActivity extends BasicActivity {
 
         loaderLayout = findViewById(R.id.loaderLayout);
         findViewById(R.id.button_make).setOnClickListener(onClickListener);
+        findViewById(R.id.button_make).setVisibility(View.GONE);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         db = FirebaseFirestore.getInstance();
@@ -115,7 +116,7 @@ public class DeliverystatusActivity extends BasicActivity {
 
 
         //블루투스 연결
-/*
+
         if (mBluetoothAdapter.isEnabled()) {
             mPairedDevices = mBluetoothAdapter.getBondedDevices();
 
@@ -164,24 +165,34 @@ public class DeliverystatusActivity extends BasicActivity {
                         e.printStackTrace();
                     }
 
-                    int endofindex = readMessage.indexOf("*");
-                    if(endofindex>10){
-                        if(mThreadConnectedBluetooth != null) {
-                            mThreadConnectedBluetooth.write("F"); //택배함 닫힘
-                        }
+                    int endofindex1 = readMessage.indexOf("#");
+                    if(endofindex1 == 0){
+                        int endofindex2 = readMessage.indexOf("*");
+                        phoneNumber = readMessage.substring(0,endofindex2);
+                        deliveryNumber = readMessage.substring(endofindex2+1 , endofindex2+3);
 
-                        //readMessage = readMessage.substring(0,11);
-                        phoneNumber = readMessage.substring(0,11); //휴대폰번호
-                        deliveryNumber = readMessage.substring(12,14); //택배함번호
-
+                        delivery_add(deliveryNumber, phoneNumber);
                     }
-                    //Firebase로 데이터 전송하는 부분
 
-                    delivery_add(deliveryNumber, phoneNumber);
+                    else {
+                        int endofindex = readMessage.indexOf("*");
+                        if (endofindex > 10) {
+                            if (mThreadConnectedBluetooth != null) {
+                                mThreadConnectedBluetooth.write("F"); //택배함 닫힘
+                            }
+                            //readMessage = readMessage.substring(0,11);
+                            phoneNumber = readMessage.substring(0, 11); //휴대폰번호
+                            deliveryNumber = readMessage.substring(12, 14); //택배함번호
+
+                        }
+                        //Firebase로 데이터 전송하는 부분
+
+                        delivery_add(deliveryNumber, phoneNumber);
+                    }
                 }
             }
         };
-*/
+
     }
 
     @Override
@@ -417,10 +428,10 @@ public class DeliverystatusActivity extends BasicActivity {
         }
     }
 
-    private class ConnectedBluetoothThread extends Thread {
-        private final BluetoothSocket mmSocket;
-        private final InputStream mmInStream;
-        private final OutputStream mmOutStream;
+    public class ConnectedBluetoothThread extends Thread {
+        public final BluetoothSocket mmSocket;
+        public final InputStream mmInStream;
+        public final OutputStream mmOutStream;
 
         public ConnectedBluetoothThread(BluetoothSocket socket) {
             mmSocket = socket;
