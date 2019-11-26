@@ -281,7 +281,6 @@ public class ChatRoomFragment extends Fragment {
     }
 
     public static String getLauncherClassName(Context context) {
-
         PackageManager pm = context.getPackageManager();
 
         Intent intent = new Intent(Intent.ACTION_MAIN);

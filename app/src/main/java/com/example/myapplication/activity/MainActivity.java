@@ -289,7 +289,7 @@ public class MainActivity extends BasicActivity {
                             DocumentSnapshot document = task.getResult();
                             if (document != null) {
                                 if (document.exists()) {
-                                    MemberInfo memberInfo = new MemberInfo(document.getData().get("nickname").toString(), document.getData().get("address").toString(), document.getData().get("telephone").toString(), Integer.valueOf(document.getData().get("point").toString()), user.getUid(), document.getData().get("usermsg").toString(), document.getData().get("token").toString(), document.getData().get("replacenum").toString(), currentcountpost, lastcountmsg, lastcountbox);
+                                    MemberInfo memberInfo = new MemberInfo(document.getData().get("nickname").toString(), document.getData().get("address").toString(), document.getData().get("telephone").toString(), document.getData().get("photoUrl").toString(), Integer.valueOf(document.getData().get("point").toString()), user.getUid(), document.getData().get("usermsg").toString(), document.getData().get("token").toString(), document.getData().get("replacenum").toString(), currentcountpost, lastcountmsg, lastcountbox);
                                     uploader_memberInfo(documentReference, memberInfo);
                                 }
                             }
@@ -306,7 +306,7 @@ public class MainActivity extends BasicActivity {
                             DocumentSnapshot document = task.getResult();
                             if (document != null) {
                                 if (document.exists()) {
-                                    MemberInfo memberInfo = new MemberInfo(document.getData().get("nickname").toString(), document.getData().get("address").toString(), document.getData().get("telephone").toString(), Integer.valueOf(document.getData().get("point").toString()), user.getUid(), document.getData().get("usermsg").toString(), document.getData().get("token").toString(), document.getData().get("replacenum").toString(), lastcountpost, currentcountmsg, lastcountbox);
+                                    MemberInfo memberInfo = new MemberInfo(document.getData().get("nickname").toString(), document.getData().get("address").toString(), document.getData().get("telephone").toString(), document.getData().get("photoUrl").toString(), Integer.valueOf(document.getData().get("point").toString()), user.getUid(), document.getData().get("usermsg").toString(), document.getData().get("token").toString(), document.getData().get("replacenum").toString(), lastcountpost, currentcountmsg, lastcountbox);
                                     uploader_memberInfo(documentReference, memberInfo);
                                 }
                             }
@@ -323,7 +323,7 @@ public class MainActivity extends BasicActivity {
                             DocumentSnapshot document = task.getResult();
                             if (document != null) {
                                 if (document.exists()) {
-                                    MemberInfo memberInfo = new MemberInfo(document.getData().get("nickname").toString(), document.getData().get("address").toString(), document.getData().get("telephone").toString(), Integer.valueOf(document.getData().get("point").toString()), user.getUid(), document.getData().get("usermsg").toString(), document.getData().get("token").toString(), document.getData().get("replacenum").toString(), lastcountpost, lastcountmsg, currentcountbox);
+                                    MemberInfo memberInfo = new MemberInfo(document.getData().get("nickname").toString(), document.getData().get("address").toString(), document.getData().get("telephone").toString(), document.getData().get("photoUrl").toString(), Integer.valueOf(document.getData().get("point").toString()), user.getUid(), document.getData().get("usermsg").toString(), document.getData().get("token").toString(), document.getData().get("replacenum").toString(), lastcountpost, lastcountmsg, currentcountbox);
                                     uploader_memberInfo(documentReference, memberInfo);
                                 }
                             }
