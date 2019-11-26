@@ -14,7 +14,14 @@
 
     </androidx.recyclerview.widget.RecyclerView>
 
-
+    <Button
+        android:id="@+id/button_make"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:text="택배정보 만들기 버튼" />
 
     <include
         layout="@layout/view_loader"

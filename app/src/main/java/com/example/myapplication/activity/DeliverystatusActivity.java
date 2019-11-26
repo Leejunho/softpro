@@ -1,7 +1,6 @@
 package com.example.myapplication.activity;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,7 +8,6 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -35,9 +33,11 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import static com.example.myapplication.Util.showToast;
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.widget.Button;
@@ -91,7 +91,7 @@ public class DeliverystatusActivity extends BasicActivity {
         setContentView(R.layout.activity_delivery_status);
 
         loaderLayout = findViewById(R.id.loaderLayout);
-        //findViewById(R.id.button_make).setOnClickListener(onClickListener);
+        findViewById(R.id.button_make).setOnClickListener(onClickListener);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         db = FirebaseFirestore.getInstance();
@@ -115,10 +115,6 @@ public class DeliverystatusActivity extends BasicActivity {
 
 
         //블루투스 연결
-        if(mBluetoothAdapter == null) {
-            showToast(DeliverystatusActivity.this, "블루투스를 사용할 수 없는 기기 입니다.");
-            finish();
-        }
 
         if (mBluetoothAdapter.isEnabled()) {
             mPairedDevices = mBluetoothAdapter.getBondedDevices();
@@ -185,6 +181,7 @@ public class DeliverystatusActivity extends BasicActivity {
                 }
             }
         };
+
     }
 
     @Override
@@ -195,7 +192,6 @@ public class DeliverystatusActivity extends BasicActivity {
         // task 의 실행순서가 스택처럼 쌓아놓고 마지막에 쌓인 task 작업부터 하나씩 완료해 나가기 때문에 전화번호를 받아오는 작업을 Update 함수 뒤에 작성하였음
         get_CurrentUserDatanum();
     }
-    /*
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -206,7 +202,6 @@ public class DeliverystatusActivity extends BasicActivity {
             }
         }
     };
-    */
 
     OnPostListener onPostListener = new OnPostListener() {
         @Override
