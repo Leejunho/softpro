@@ -3,15 +3,10 @@ package com.example.myapplication.activity;
 import androidx.annotation.NonNull;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
-import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,7 +24,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.iid.FirebaseInstanceId;
 
 import static com.example.myapplication.Util.showToast;
 
@@ -73,6 +67,8 @@ public class MainActivity extends BasicActivity {
         findViewById(R.id.button_board).setOnClickListener(onClickListener);
         findViewById(R.id.button_note).setOnClickListener(onClickListener);
         findViewById(R.id.button_profile).setOnClickListener(onClickListener);
+        findViewById(R.id.imageView_mainlogo).setOnClickListener(onClickListener);
+
         textView_nickname = (TextView) findViewById(R.id.textView_usernickname);
         textView_point = (TextView) findViewById(R.id.textView_point);
         textView_posts = (TextView) findViewById(R.id.textView_posts);
@@ -82,9 +78,6 @@ public class MainActivity extends BasicActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         db = FirebaseFirestore.getInstance();
         readlastcount();
-
-        Log.d(String.valueOf(lastcountpost), "post: ");
-        Log.d(String.valueOf(currentcountpost), "post: ");
 
         showToast(MainActivity.this,"반갑습니다");
     }
@@ -119,30 +112,39 @@ public class MainActivity extends BasicActivity {
                 case R.id.button_profile:  // 회원정보 버튼 클릭했을때 동작
                     myStartActivity(profileActivity.class);
                     break;
+
+                case R.id.imageView_mainlogo:  // 메인로고 클릭했을때 동작
+                    myStartActivity(DevelopuserActivity.class);
+                    break;
             }
         }
     };
 
     private void readlastcount() {
-        Log.d(TAG, "1: ");
-        DocumentReference documentReference = db.collection("users").document(user.getUid());
-        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document != null) {
-                        if (document.exists()) {
-                            lastcountpost = Integer.valueOf(document.getData().get("countpost").toString());
-                            lastcountmsg = Integer.valueOf(document.getData().get("countmsg").toString());
-                            lastcountbox = Integer.valueOf(document.getData().get("countbox").toString());
+        if(user == null) {
+            myStartActivity(LoginActivity.class);
+            finish();
+        }
+        else {
+            DocumentReference documentReference = db.collection("users").document(user.getUid());
+            documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document != null) {
+                            if (document.exists()) {
+                                lastcountpost = Integer.valueOf(document.getData().get("countpost").toString());
+                                lastcountmsg = Integer.valueOf(document.getData().get("countmsg").toString());
+                                lastcountbox = Integer.valueOf(document.getData().get("countbox").toString());
 
-                            readcurrentcount();
+                                readcurrentcount();
+                            }
                         }
                     }
                 }
-            }
-        });
+            });
+        }
     }
 
     private void readcurrentcount() {

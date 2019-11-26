@@ -7,23 +7,39 @@
         android:id="@+id/textView_posts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingTop="5dp"
+        android:paddingBottom="30dp"
         android:text="개발팀" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:background="#0037FF"
+        android:gravity="center"
+        android:text="Dong-A University Computer Engineering"
+        android:textColor="@color/common_google_signin_btn_text_dark_default" />
 
     <TextView
         android:id="@+id/textView_rooms"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:gravity="center"
+        android:text="1434719 변인석" />
 
     <TextView
         android:id="@+id/textView_delivery"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:gravity="center"
+        android:text="1434767 정준영" />
 
     <TextView
         android:id="@+id/textView_profile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:gravity="center"
+        android:text="1434477 이준호" />
 </LinearLayout>

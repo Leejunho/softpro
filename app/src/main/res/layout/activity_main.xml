@@ -7,7 +7,7 @@
     tools:context=".activity.MainActivity">
 
     <ImageView
-        android:id="@+id/imageView6"
+        android:id="@+id/imageView_mainlogo"
         android:layout_width="320dp"
         android:layout_height="95dp"
         android:layout_marginTop="44dp"
@@ -23,9 +23,9 @@
         android:layout_marginTop="54dp"
         android:layout_marginBottom="120dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/imageView6"
-        app:layout_constraintStart_toStartOf="@+id/imageView6"
-        app:layout_constraintTop_toBottomOf="@+id/imageView6">
+        app:layout_constraintEnd_toEndOf="@+id/imageView_mainlogo"
+        app:layout_constraintStart_toStartOf="@+id/imageView_mainlogo"
+        app:layout_constraintTop_toBottomOf="@+id/imageView_mainlogo">
 
         <TableRow
             android:layout_width="match_parent"

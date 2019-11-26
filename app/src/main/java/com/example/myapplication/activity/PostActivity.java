@@ -158,6 +158,7 @@ public class PostActivity extends BasicActivity {
     }
 
     public void checkauthority() {
+        /*
         if(user.getUid().equals("1R5r4L6O1PeA4h93RrCNYK4zQzS2") || user.getUid().equals("4cuaqNgeOCaun6dxrakLdRTkDpj1") || user.getUid().equals("T8oDzbNpoUYKd77AycscZU3bXry1"))  {
             // 관리자 GM
             // 모든 글 수정 삭제 가능
@@ -166,7 +167,8 @@ public class PostActivity extends BasicActivity {
             // 입수신청 버튼이 사용가능
             findViewById(R.id.button_send).setVisibility(View.VISIBLE);
         }
-        else if(!postInfo.getConsumer().equals("")) {
+        */
+        if(!postInfo.getConsumer().equals("")) {
             // 거래 진행 중
 
             // 입수신청 버튼이 사용불가

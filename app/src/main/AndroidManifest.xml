@@ -35,6 +35,7 @@
         <activity android:name=".activity.ChatRoomActivity" />
         <activity android:name=".activity.ChatActivity" />
         <activity android:name=".activity.SelectUserActivity" />
+        <activity android:name=".activity.DevelopuserActivity" />
         <activity android:name=".activity.MainActivity" />
         <activity android:name=".activity.IntroActivity">
             <intent-filter>
