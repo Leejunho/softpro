@@ -282,28 +282,31 @@ public class PostActivity extends BasicActivity {
                         }
                         else {
                             uploader_postInfo(documentReference, new PostInfo(postInfo.getTitle(), postInfo.getPrice(), postInfo.getTerm(), postInfo.getContents(), postInfo.getPublisher(), postInfo.getCreatedAt(), postInfo.getViewCount(), postInfo.getConsumer(), postInfo.getRoomID(), "YES", postInfo.getCompleteconsumer(), postInfo.getComplete(), postInfo.getBoxnum()));
-                            if (postInfo.getCompleteconsumer().equals("NO")) {
-                                showToast(PostActivity.this, "거래를 완료하였습니다. 상대방의 거래완료를 대기중입니다.");
+                            if (postInfo.getCompleteconsumer().equals("YES")) {
+                                uploader_postInfo(documentReference, new PostInfo(postInfo.getTitle(), postInfo.getPrice(), postInfo.getTerm(), postInfo.getContents(), postInfo.getPublisher(), postInfo.getCreatedAt(), postInfo.getViewCount(), postInfo.getConsumer(), postInfo.getRoomID(), "YES", postInfo.getCompleteconsumer(), "YES", postInfo.getBoxnum()));
+                                showToast(PostActivity.this, "거래를 완료하였습니다");
                             }
                             else {
-                                chatmakecomplete();
-                                textView_currentprogress.setText("거래가 완료되었습니다");
+                                uploader_postInfo(documentReference, new PostInfo(postInfo.getTitle(), postInfo.getPrice(), postInfo.getTerm(), postInfo.getContents(), postInfo.getPublisher(), postInfo.getCreatedAt(), postInfo.getViewCount(), postInfo.getConsumer(), postInfo.getRoomID(), "YES", postInfo.getCompleteconsumer(), postInfo.getComplete(), postInfo.getBoxnum()));
+
+                                showToast(PostActivity.this, "거래를 완료하였습니다. 상대방의 거래완료를 대기중입니다.");
                             }
                         }
                     }
                     else if(user.getUid().equals(postInfo.getConsumer())){
-                        if(postInfo.getCompletepublisher().equals("YES")) {
+                        if(postInfo.getCompleteconsumer().equals("YES")) {
                             // 이미 거래완료를 클릭했을 경우
                             showToast(PostActivity.this, "거래완료 신청을 이미 하셨습니다.");
                         }
                         else {
                             uploader_postInfo(documentReference, new PostInfo(postInfo.getTitle(), postInfo.getPrice(), postInfo.getTerm(), postInfo.getContents(), postInfo.getPublisher(), postInfo.getCreatedAt(), postInfo.getViewCount(), postInfo.getConsumer(), postInfo.getRoomID(), postInfo.getCompletepublisher(), "YES", postInfo.getComplete(), postInfo.getBoxnum()));
-                            if (postInfo.getCompletepublisher().equals("NO")) {
-                                showToast(PostActivity.this, "거래를 완료하였습니다. 상대방의 거래완료를 대기중입니다.");
+                            if (postInfo.getCompletepublisher().equals("YES")) {
+                                uploader_postInfo(documentReference, new PostInfo(postInfo.getTitle(), postInfo.getPrice(), postInfo.getTerm(), postInfo.getContents(), postInfo.getPublisher(), postInfo.getCreatedAt(), postInfo.getViewCount(), postInfo.getConsumer(), postInfo.getRoomID(), postInfo.getCompletepublisher(), "YES", "YES", postInfo.getBoxnum()));
+                                showToast(PostActivity.this, "거래를 완료하였습니다");
                             }
                             else {
-                                chatmakecomplete();
-                                textView_currentprogress.setText("거래가 완료되었습니다");
+                                uploader_postInfo(documentReference, new PostInfo(postInfo.getTitle(), postInfo.getPrice(), postInfo.getTerm(), postInfo.getContents(), postInfo.getPublisher(), postInfo.getCreatedAt(), postInfo.getViewCount(), postInfo.getConsumer(), postInfo.getRoomID(), postInfo.getCompletepublisher(), "YES", postInfo.getComplete(), postInfo.getBoxnum()));
+                                showToast(PostActivity.this, "거래를 완료하였습니다. 상대방의 거래완료를 대기중입니다.");
                             }
                         }
                     }
@@ -416,23 +419,27 @@ public class PostActivity extends BasicActivity {
         }
     };
 
-    private void chatmakecomplete() {
+    private void chatmakecomplete(final PostInfo postInfo) {
         // 거래 대화 진행중인 채팅방 complete YES로 변경 (거래 완료)
-        Map<String, Object> data = new HashMap<>();
-        data.put("complete", "YES");
-        DocumentReference room = FirebaseFirestore.getInstance().collection("rooms").document(postInfo.getRoomID());
-        room.set(data).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
+        if(postInfo.getCompletepublisher().equals("YES") && postInfo.getCompleteconsumer().equals("YES")) {
+            Map<String, Object> data = new HashMap<>();
+            data.put("complete", "YES");
+            DocumentReference room = FirebaseFirestore.getInstance().collection("rooms").document(postInfo.getRoomID());
+            room.set(data).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
 
+                    }
                 }
-            }
-        });
+            });
 
-        // 해당 게시판 complete YES로 변경 (거래 완료)
-        DocumentReference documentReference_complete = db.collection("posts").document(postInfo.getId());
-        uploader_postInfo(documentReference_complete, new PostInfo(postInfo.getTitle(), postInfo.getPrice(), postInfo.getTerm(), postInfo.getContents(), postInfo.getPublisher(), postInfo.getCreatedAt(), postInfo.getViewCount(), postInfo.getConsumer(), postInfo.getRoomID(), postInfo.getCompletepublisher(), postInfo.getCompleteconsumer(), "YES", postInfo.getBoxnum()));
+            // 해당 게시판 complete YES로 변경 (거래 완료)
+            DocumentReference documentReference_complete = db.collection("posts").document(postInfo.getId());
+            uploader_postInfo(documentReference_complete, new PostInfo(postInfo.getTitle(), postInfo.getPrice(), postInfo.getTerm(), postInfo.getContents(), postInfo.getPublisher(), postInfo.getCreatedAt(), postInfo.getViewCount(), postInfo.getConsumer(), postInfo.getRoomID(), postInfo.getCompletepublisher(), postInfo.getCompleteconsumer(), "YES", postInfo.getBoxnum()));
+
+            textView_currentprogress.setText("거래가 완료되었습니다");
+        }
     }
 
     private void uploader_postInfo(DocumentReference documentReference, final PostInfo postInfo) {

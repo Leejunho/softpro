@@ -130,6 +130,7 @@ public class ChatFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        Log.d("1", "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@: ");
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
 
         recyclerView = view.findViewById(R.id.recyclerView);
@@ -216,6 +217,7 @@ public class ChatFragment extends Fragment {
 
     // get a user info
     void getUserInfoFromServer(String id){
+        Log.d("2", "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@: ");
         firestore.collection("users").document(id).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -231,6 +233,7 @@ public class ChatFragment extends Fragment {
 
     // Returns the room ID after locating the chatting room with the user ID.
     void findChatRoom(final String toUid){
+        Log.d("3", "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@: ");
         firestore.collection("rooms").whereGreaterThanOrEqualTo("users."+myUid, 0).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -250,6 +253,7 @@ public class ChatFragment extends Fragment {
 
     // get user list in a chatting room
     void setChatRoom(String rid) {
+        Log.d("4", "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@: ");
         roomID = rid;
         firestore.collection("rooms").document(roomID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -262,6 +266,7 @@ public class ChatFragment extends Fragment {
                     getUserInfoFromServer(key);
                 }
                 userCount = users.size();
+
                 //users.put(myUid, (long) 0);
                 //document.getReference().update("users", users);
             }
@@ -269,6 +274,7 @@ public class ChatFragment extends Fragment {
     }
 
     void setUnread2Read() {
+        Log.d("5", "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@: ");
         if (roomID==null) return;
 
         firestore.collection("rooms").document(roomID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -285,6 +291,7 @@ public class ChatFragment extends Fragment {
     }
 
     public void CreateChattingRoom(final DocumentReference room) {
+        Log.d("6", "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@: ");
         Map<String, Integer> users = new HashMap<>();
         String title = "";
         for( String key : userList.keySet() ){
@@ -318,6 +325,7 @@ public class ChatFragment extends Fragment {
     };
 
     private void sendMessage(final String msg, String msgtype, final ChatModel.FileInfo fileinfo) {
+        Log.d("7", "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@: ");
         sendBtn.setEnabled(false);
 
         if (roomID==null) {             // create chatting room for two user
@@ -376,6 +384,7 @@ public class ChatFragment extends Fragment {
     };
 
     void sendGCM(){
+        Log.d("8", "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@: ");
         Gson gson = new Gson();
         NotificationModel notificationModel = new NotificationModel();
         notificationModel.notification.title = userList.get(myUid).getNickname();
@@ -426,6 +435,7 @@ public class ChatFragment extends Fragment {
     // uploading image / file
     @Override
     public void onActivityResult(final int requestCode, int resultCode, Intent data) {
+        Log.d("9", "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@: ");
         if (resultCode!= RESULT_OK) { return;}
         Uri fileUri = data.getData();
         final String filename = Util9.getUniqueValue();
@@ -460,6 +470,7 @@ public class ChatFragment extends Fragment {
 
     // get file name and size from Uri
     public static ChatModel.FileInfo getFileDetailFromUri(final Context context, final Uri uri) {
+        Log.d("10", "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@: ");
         if (uri == null) { return null; }
 
         ChatModel.FileInfo fileDetail = new ChatModel.FileInfo();
@@ -486,6 +497,7 @@ public class ChatFragment extends Fragment {
     }
 
     public void showProgressDialog(String title ) {
+        Log.d("11", "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@: ");
         if (progressDialog==null) {
             progressDialog = new ProgressDialog(getContext());
         }
@@ -525,6 +537,7 @@ public class ChatFragment extends Fragment {
         }
 
         public void startListening() {
+            Log.d("12", "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@: ");
             beforeDay = null;
             messageList.clear();
 
@@ -537,7 +550,6 @@ public class ChatFragment extends Fragment {
 
                     MessageInfo message;
                     for (DocumentChange change : documentSnapshots.getDocumentChanges()) {
-
                         switch (change.getType()) {
                             case ADDED:
                                 message = change.getDocument().toObject(MessageInfo.class);
@@ -572,12 +584,13 @@ public class ChatFragment extends Fragment {
                 listenerRegistration = null;
             }
 
-            messageList.clear();
+            if(messageList != null) messageList.clear();
             notifyDataSetChanged();
         }
 
         @Override
         public int getItemViewType(int position) {
+            Log.d("13", "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@: ");
             MessageInfo message = messageList.get(position);
             if (myUid.equals(message.getUid()) ) {
                 switch(message.getMsgtype()){
@@ -596,6 +609,7 @@ public class ChatFragment extends Fragment {
         @NonNull
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            Log.d("14", "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@: ");
             View view = null;
             view = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
             return new MessageViewHolder(view);
@@ -603,6 +617,7 @@ public class ChatFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+            Log.d("15", "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@: ");
             final MessageViewHolder messageViewHolder = (MessageViewHolder) holder;
             final MessageInfo message = messageList.get(position);
 
@@ -690,6 +705,7 @@ public class ChatFragment extends Fragment {
         }
 
         void setReadCounter (MessageInfo message, final TextView textView) {
+            Log.d("16", "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@: ");
             int cnt = userCount - message.getReadUsers().size();
             if (cnt > 0) {
                 textView.setVisibility(View.VISIBLE);

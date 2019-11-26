@@ -115,7 +115,7 @@ public class DeliverystatusActivity extends BasicActivity {
 
 
         //블루투스 연결
-
+/*
         if (mBluetoothAdapter.isEnabled()) {
             mPairedDevices = mBluetoothAdapter.getBondedDevices();
 
@@ -181,7 +181,7 @@ public class DeliverystatusActivity extends BasicActivity {
                 }
             }
         };
-
+*/
     }
 
     @Override
@@ -233,32 +233,68 @@ public class DeliverystatusActivity extends BasicActivity {
 
     private void deliveryUpdate() {
         if(user != null) {
-            CollectionReference collectionReference = db.collection("delivery");
-            collectionReference.orderBy("createdAt", Query.Direction.DESCENDING).get()  // 시간순으로 내림차순 정렬하여 게시판에 보여줌
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            Log.d("0", "deliveryUpdate 실행");  // 지우지 말것
-                            if (task.isSuccessful()) {
-                                deliveryList.clear();
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    // 현재 사용자 전화번호와 택배함 전화번호가 일치하는 것들만 보여줌   또는 자신에게 권한이 있으면 보여줌
-                                     if(currentusertelephone.equals(document.getData().get("telephone").toString()) || currentuserreplacenum.equals(document.getData().get("telephone").toString()) || consumertelphone.equals(document.getData().get("telephone").toString())) {
-                                         if(document.getData().get("consumertelphone") != null) consumertelphone = document.getData().get("consumertelphone").toString();
-                                         else consumertelphone = "";
-                                         deliveryList.add(new DeliveryInfo(
-                                                // db에 저장되어있는 게시판 작성의 값들을 postList에 저장
-                                                document.getData().get("telephone").toString(),
-                                                document.getData().get("boxnum").toString(),
-                                                new Date(document.getDate("createdAt").getTime()),
-                                                 consumertelphone
-                                        ));
-                                    }
-                                }
-                                deliveryAdapter.notifyDataSetChanged();
+
+
+            DocumentReference documentReference5 = db.collection("users").document(user.getUid());
+            documentReference5.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    Log.d("0", "get_CurrentUserTelephone 실행");  // 지우지 말것
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document5 = task.getResult();
+                        if (document5 != null) {
+                            if (document5.exists()) {
+                                currentusertelephone = document5.getData().get("telephone").toString();
+                                currentuserreplacenum = document5.getData().get("replacenum").toString();
+                                if(document5.getData().get("consumertelphone") != null) consumertelphone = document5.getData().get("consumertelphone").toString();
+
+
+
+
+                                CollectionReference collectionReference = db.collection("delivery");
+                                collectionReference.orderBy("createdAt", Query.Direction.DESCENDING).get()  // 시간순으로 내림차순 정렬하여 게시판에 보여줌
+                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                Log.d("0", "deliveryUpdate 실행");  // 지우지 말것
+                                                if (task.isSuccessful()) {
+                                                    deliveryList.clear();
+                                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                                        if(document.getData().get("consumertelphone") != null) consumertelphone = document.getData().get("consumertelphone").toString();
+                                                        else consumertelphone = "";
+                                                        // 현재 사용자 전화번호와 택배함 전화번호가 일치하는 것들만 보여줌   또는 자신에게 권한이 있으면 보여줌
+                                                        if(currentusertelephone.equals(document.getData().get("telephone").toString()) || currentuserreplacenum.equals(document.getData().get("telephone").toString())) {
+                                                            deliveryList.add(new DeliveryInfo(
+                                                                    // db에 저장되어있는 게시판 작성의 값들을 postList에 저장
+                                                                    document.getData().get("telephone").toString(),
+                                                                    document.getData().get("boxnum").toString(),
+                                                                    new Date(document.getDate("createdAt").getTime()),
+                                                                    consumertelphone
+                                                            ));
+                                                        }
+                                                        else if(!consumertelphone.equals("")) {
+                                                            if(consumertelphone.equals(document.getData().get("consumertelphone").toString())) {
+                                                                deliveryList.add(new DeliveryInfo(
+                                                                        // db에 저장되어있는 게시판 작성의 값들을 postList에 저장
+                                                                        document.getData().get("telephone").toString(),
+                                                                        document.getData().get("boxnum").toString(),
+                                                                        new Date(document.getDate("createdAt").getTime()),
+                                                                        consumertelphone
+                                                                ));
+
+                                                            }
+                                                        }
+                                                    }
+                                                    deliveryAdapter.notifyDataSetChanged();
+                                                }
+                                            }
+                                        });
+
                             }
                         }
-                    });
+                    }
+                }
+            });
         }
     }
     private void delivery_add2() {
