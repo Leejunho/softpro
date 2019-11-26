@@ -2,6 +2,7 @@ package com.example.myapplication.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.example.myapplication.MemberInfo;
 import com.example.myapplication.PostInfo;
 import com.example.myapplication.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -21,20 +23,32 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import static com.example.myapplication.Util.showToast;
 
 public class PostActivity extends BasicActivity {
     private PostInfo postInfo;
+    private MemberInfo memberInfo;
     private FirebaseUser user;
     private FirebaseFirestore db;
     private TextView textView_title;
+    private TextView textView_price;
+    private TextView textView_term;
     private TextView textView_contents;
-    private TextView createdAtTextView;
+    private TextView textView_createdAt;
+    private TextView textView_nickname;
     private TextView textView_point;
+    private TextView textView_currentprogress;
+    private TextView textView_ipoint;
+    private TextView textView_inickname;
+    private TextView textView_iboxnum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,38 +61,78 @@ public class PostActivity extends BasicActivity {
         // 게시글을 클릭하면 postInfo 데이터를 PostActivity로 넘겨받음.
         postInfo = (PostInfo)getIntent().getSerializableExtra("postInfo");
 
+        // 입수신청 거래완료 거래취소 추천하기 버튼 보이지 않게 만듬
+        findViewById(R.id.button_send).setVisibility(View.GONE);
+        findViewById(R.id.button_complete).setVisibility(View.GONE);
+        findViewById(R.id.button_cancel).setVisibility(View.GONE);
+        findViewById(R.id.button_recommend).setVisibility(View.GONE);
+
+        // 입수자 정보 보이지 않게 만듬
+        findViewById(R.id.textView_i1).setVisibility(View.GONE);
+        findViewById(R.id.LinearLayout_i3).setVisibility(View.GONE);
+        findViewById(R.id.LinearLayout_i2).setVisibility(View.GONE);
+        findViewById(R.id.LinearLayout_i4).setVisibility(View.GONE);
+        findViewById(R.id.view_i2).setVisibility(View.GONE);
+        findViewById(R.id.view_i3).setVisibility(View.GONE);
+        findViewById(R.id.view_i4).setVisibility(View.GONE);
+        findViewById(R.id.view_i).setVisibility(View.GONE);
+
 
         findViewById(R.id.menu).setOnClickListener(onClickListener);
         findViewById(R.id.button_send).setOnClickListener(onClickListener);
+        findViewById(R.id.button_complete).setOnClickListener(onClickListener);
+        findViewById(R.id.button_cancel).setOnClickListener(onClickListener);
+        findViewById(R.id.button_recommend).setOnClickListener(onClickListener);
+
+        textView_title = findViewById(R.id.textView_title);
+        textView_price = findViewById(R.id.textView_price);
+        textView_term = findViewById(R.id.textView_term);
+        textView_contents = findViewById(R.id.textView_contents);
+        textView_createdAt = findViewById(R.id.textView_createdAt);
+        textView_nickname = findViewById(R.id.textView_nickname);
+        textView_point = findViewById(R.id.textView_point);
+        textView_currentprogress = findViewById(R.id.textView_currentprogress);
+        textView_ipoint = findViewById(R.id.textView_ipoint);
+        textView_inickname = findViewById(R.id.textView_inickname);
+        textView_iboxnum = findViewById(R.id.textView_inickname);
 
         setTextinvalues();
 
-        checkauthority();
+        if(!checktradefinish()) {
+            checkauthority();
+        }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        findViewById(R.id.button_send).setVisibility(View.GONE);
+        findViewById(R.id.button_complete).setVisibility(View.GONE);
+        findViewById(R.id.button_cancel).setVisibility(View.GONE);
+        findViewById(R.id.button_recommend).setVisibility(View.GONE);
+        postInfo = (PostInfo)getIntent().getSerializableExtra("postInfo");
+
+        Log.d("zzzzzz", "zzzzzzzzzzzzzzzzzzzzzzzzzzzz: ");
+        if(!checktradefinish()) {
+            checkauthority();
+        }
+    }
+
+
     private void setTextinvalues() {
+        /* 게시글 정보*/
         // 게시글 물품제목
-        textView_title = findViewById(R.id.textView_title);
         textView_title.setText(postInfo.getTitle());
-
         // 게시글 제안금액
-        textView_contents = findViewById(R.id.editText_price);
-        textView_contents.setText(String.valueOf(postInfo.getPrice()));
-
+        textView_price.setText(String.valueOf(postInfo.getPrice()));
         // 게시글 기간
-        textView_contents = findViewById(R.id.editText_term);
-        textView_contents.setText(postInfo.getTerm() + "까지");
-
+        textView_term.setText(postInfo.getTerm());
         // 게시글 내용
-        textView_contents = findViewById(R.id.textView_contents);
         textView_contents.setText(postInfo.getContents());
-
         // 게시글 올린 날짜
-        createdAtTextView = findViewById(R.id.textView_createdAt);
-        createdAtTextView.setText(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss 작성", Locale.getDefault()).format(postInfo.getCreatedAt()));
+        textView_createdAt.setText(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss 작성", Locale.getDefault()).format(postInfo.getCreatedAt()));
 
-        // 거래점수
-        textView_point = findViewById(R.id.textView_point);
+        /*신청자 정보*/
         DocumentReference documentReference = db.collection("users").document(postInfo.getPublisher());
         documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -88,6 +142,9 @@ public class PostActivity extends BasicActivity {
                     if (document != null) {
                         if (document.exists()) {
                             if(document.getData().get("point") != null) {
+                                // 닉네임
+                                textView_nickname.setText(document.getData().get("nickname").toString());
+                                // 거래점수
                                 textView_point.setText(document.getData().get("point").toString() +"점");
                             }
                         }
@@ -108,13 +165,20 @@ public class PostActivity extends BasicActivity {
         }
         else if(!postInfo.getConsumer().equals("")) {
             // 거래 진행 중
-            showToast(PostActivity.this, "거래가 진행중입니다");
 
             // 입수신청 버튼이 사용불가
             findViewById(R.id.button_send).setVisibility(View.GONE);
+            textView_currentprogress.setText("거래가 진행중인 물품입니다.");
+
+            if(postInfo.getConsumer().equals(user.getUid()) || postInfo.getPublisher().equals(user.getUid())) {
+                findViewById(R.id.button_complete).setVisibility(View.VISIBLE);
+                findViewById(R.id.button_cancel).setVisibility(View.VISIBLE);
+
+                showcosumerInfo();
+            }
         }
         else if(user.getUid().equals(postInfo.getPublisher())) {
-            // 게시글의 작성자PostAdapter
+            // 게시글의 작성자
             // 수정 삭제 가능
             findViewById(R.id.menu).setVisibility(View.VISIBLE);
 
@@ -131,10 +195,59 @@ public class PostActivity extends BasicActivity {
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        postInfo = (PostInfo)getIntent().getSerializableExtra("postInfo");
+    public boolean checktradefinish() {
+        if(postInfo.getComplete().equals("YES")) {
+            if(postInfo.getPublisher().equals(user.getUid())) {
+                // 글 작성자
+                showcosumerInfo();
+                if(postInfo.getCompletepublisher().equals("YES")) {
+                    // 투표권이 있는 경우에만 추천하기 버튼을 보여줌
+                    findViewById(R.id.button_recommend).setVisibility(View.VISIBLE);
+                }
+            }
+            else if(postInfo.getConsumer().equals(user.getUid())) {
+                // 입수자
+                showcosumerInfo();
+                if(postInfo.getCompleteconsumer().equals("YES")) {
+                    // 투표권이 있는 경우에만 추천하기 버튼을 보여줌
+                    findViewById(R.id.button_recommend).setVisibility(View.VISIBLE);
+                }
+            }
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    private void showcosumerInfo() {
+        findViewById(R.id.textView_i1).setVisibility(View.VISIBLE);
+        findViewById(R.id.LinearLayout_i3).setVisibility(View.VISIBLE);
+        findViewById(R.id.LinearLayout_i2).setVisibility(View.VISIBLE);
+        findViewById(R.id.LinearLayout_i4).setVisibility(View.VISIBLE);
+        findViewById(R.id.view_i2).setVisibility(View.VISIBLE);
+        findViewById(R.id.view_i3).setVisibility(View.VISIBLE);
+        findViewById(R.id.view_i4).setVisibility(View.VISIBLE);
+        findViewById(R.id.view_i).setVisibility(View.VISIBLE);
+
+        DocumentReference documentReference = db.collection("users").document(postInfo.getConsumer());
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document != null) {
+                        if (document.exists()) {
+                            // 닉네임
+                            textView_inickname.setText(document.getData().get("nickname").toString());
+                            // 거래점수
+                            textView_ipoint.setText(document.getData().get("point").toString() + "점");
+                            textView_iboxnum.setText(document.getData().get("boxnum").toString());
+                        }
+                    }
+                }
+            }
+        });
     }
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -146,11 +259,190 @@ public class PostActivity extends BasicActivity {
                     break;
 
                 case R.id.button_send:  // 입수신청 메뉴 버튼 클릭했을때 동작
+
+
+
                     myStartActivity(CheckpostActivity.class, postInfo);
+                    break;
+
+                case R.id.button_complete:  // 거래완료 버튼 클릭했을때 동작
+                    DocumentReference documentReference = db.collection("posts").document(postInfo.getId());
+                    // db 저장 함수
+                    if(user.getUid().equals(postInfo.getPublisher())) {
+                        // 자신이 게시판 작성자 인 경우
+                        if(postInfo.getCompletepublisher().equals("YES")) {
+                            // 게시판 작성자가 이미 거래완료를 클릭한 경우
+                            showToast(PostActivity.this, "거래완료 신청을 이미 하셨습니다.");
+                        }
+                        else {
+                            uploader_postInfo(documentReference, new PostInfo(postInfo.getTitle(), postInfo.getPrice(), postInfo.getTerm(), postInfo.getContents(), postInfo.getPublisher(), postInfo.getCreatedAt(), postInfo.getViewCount(), postInfo.getConsumer(), postInfo.getRoomID(), "YES", postInfo.getCompleteconsumer(), postInfo.getComplete(), postInfo.getBoxnum()));
+                            if (postInfo.getCompleteconsumer().equals("NO")) {
+                                showToast(PostActivity.this, "거래를 완료하였습니다. 상대방의 거래완료를 대기중입니다.");
+                            }
+                            else {
+                                chatmakecomplete();
+                                textView_currentprogress.setText("거래가 완료되었습니다");
+                            }
+                        }
+                    }
+                    else if(user.getUid().equals(postInfo.getConsumer())){
+                        if(postInfo.getCompletepublisher().equals("YES")) {
+                            // 이미 거래완료를 클릭했을 경우
+                            showToast(PostActivity.this, "거래완료 신청을 이미 하셨습니다.");
+                        }
+                        else {
+                            uploader_postInfo(documentReference, new PostInfo(postInfo.getTitle(), postInfo.getPrice(), postInfo.getTerm(), postInfo.getContents(), postInfo.getPublisher(), postInfo.getCreatedAt(), postInfo.getViewCount(), postInfo.getConsumer(), postInfo.getRoomID(), postInfo.getCompletepublisher(), "YES", postInfo.getComplete(), postInfo.getBoxnum()));
+                            if (postInfo.getCompletepublisher().equals("NO")) {
+                                showToast(PostActivity.this, "거래를 완료하였습니다. 상대방의 거래완료를 대기중입니다.");
+                            }
+                            else {
+                                chatmakecomplete();
+                                textView_currentprogress.setText("거래가 완료되었습니다");
+                            }
+                        }
+                    }
+
+
+
+                    break;
+
+                case R.id.button_cancel:  // 거래취소 메뉴 버튼 클릭했을때 동작
+                    // 채팅방
+                    /*
+                    // Yes로 만드는 구문
+                    final DocumentReference docRef = db.collection("rooms").document(postInfo.getRoomID());
+                    docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (!task.isSuccessful()) {return;}
+                            DocumentSnapshot document = task.getResult();
+                            document.getReference().update("complete", "YES");
+                        }
+                    });
+                    */
+
+                    // 삭제 구문
+                    /*
+                    db.collection("rooms").document(postInfo.getRoomID())
+                            .delete()
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+
+                                }
+                            });
+                    */
+
+                    // postinfo 거래 진행중 정보 삭제
+                    DocumentReference documentReference_cancel = db.collection("posts").document(postInfo.getId());
+                    uploader_postInfo(documentReference_cancel, new PostInfo(postInfo.getTitle(), postInfo.getPrice(), postInfo.getTerm(), postInfo.getContents(), postInfo.getPublisher(), postInfo.getCreatedAt(), postInfo.getViewCount(), "", "", "NO", "NO", "NO", postInfo.getBoxnum()));
+                    showToast(PostActivity.this, "거래를 취소하였습니다.");
+                    finish();
+                    break;
+
+                case R.id.button_recommend:  // 추천버튼 클릭했을때 동작
+                    final String useruid;
+                    // 상대에게 추천을 하기위해 상대 uid 정보를 받아옴
+                    if(postInfo.getPublisher().equals(user.getUid())) {
+                        // 거래글을 작성한 사람이 추천버튼을 눌렀을 때
+                        useruid = postInfo.getConsumer();
+                    }
+                    else {
+                        // 입수하여 물건을 맡아준 사람이 추천버튼을 눌렀을 때
+                        useruid = postInfo.getPublisher();
+                    }
+
+                    // 유저 데이터를 찾아서 가져와 uploader_postInfo 즉 새로 update 시킴
+                    db.collection("users")
+                            .whereEqualTo("uid", useruid)
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        // 추천점수 +1 점 상승
+                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                            String photoUrl = document.getData().get("photoUrl") == null ? null : document.getData().get("photoUrl").toString();
+                                            memberInfo = new MemberInfo(document.getData().get("nickname").toString(), document.getData().get("address").toString(), document.getData().get("telephone").toString(), photoUrl, Integer.valueOf(document.getData().get("point").toString()) + 1, document.getData().get("uid").toString(), document.getData().get("usermsg").toString(), document.getData().get("token").toString(), document.getData().get("replacenum").toString(), Integer.valueOf(document.getData().get("countpost").toString()), Integer.valueOf(document.getData().get("countmsg").toString()), Integer.valueOf(document.getData().get("countbox").toString()));
+                                        }
+                                        DocumentReference documentReference_recommend = db.collection("users").document(useruid);
+                                        uploader_memberInfo(documentReference_recommend, memberInfo);
+
+                                        DocumentReference documentReference_cancel = db.collection("posts").document(postInfo.getId());
+                                        if(postInfo.getPublisher().equals(user.getUid())) {
+                                            // 거래글을 작성한 사람이 추천버튼을 눌렀을 때
+                                            uploader_postInfo(documentReference_cancel, new PostInfo(postInfo.getTitle(), postInfo.getPrice(), postInfo.getTerm(), postInfo.getContents(), postInfo.getPublisher(), postInfo.getCreatedAt(), postInfo.getViewCount(), postInfo.getConsumer(), postInfo.getRoomID(), "NO", postInfo.getCompleteconsumer(), postInfo.getComplete(), postInfo.getBoxnum()));
+                                        }
+                                        else {
+                                            // 입수하여 물건을 맡아준 사람이 추천버튼을 눌렀을 때
+                                            uploader_postInfo(documentReference_cancel, new PostInfo(postInfo.getTitle(), postInfo.getPrice(), postInfo.getTerm(), postInfo.getContents(), postInfo.getPublisher(), postInfo.getCreatedAt(), postInfo.getViewCount(), postInfo.getConsumer(), postInfo.getRoomID(), postInfo.getCompletepublisher(), "NO", postInfo.getComplete(), postInfo.getBoxnum()));
+                                        }
+                                        finish();
+                                        showToast(PostActivity.this, "상대에게 거래점수를 1점 주셨습니다.");
+                                    }
+                                }
+                            });
                     break;
             }
         }
     };
+
+    private void chatmakecomplete() {
+        // 거래 대화 진행중인 채팅방 complete YES로 변경 (거래 완료)
+        Map<String, Object> data = new HashMap<>();
+        data.put("complete", "YES");
+        DocumentReference room = FirebaseFirestore.getInstance().collection("rooms").document(postInfo.getRoomID());
+        room.set(data).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+
+                }
+            }
+        });
+
+        // 해당 게시판 complete YES로 변경 (거래 완료)
+        DocumentReference documentReference_complete = db.collection("posts").document(postInfo.getId());
+        uploader_postInfo(documentReference_complete, new PostInfo(postInfo.getTitle(), postInfo.getPrice(), postInfo.getTerm(), postInfo.getContents(), postInfo.getPublisher(), postInfo.getCreatedAt(), postInfo.getViewCount(), postInfo.getConsumer(), postInfo.getRoomID(), postInfo.getCompletepublisher(), postInfo.getCompleteconsumer(), "YES", postInfo.getBoxnum()));
+    }
+
+    private void uploader_postInfo(DocumentReference documentReference, final PostInfo postInfo) {
+        documentReference.set(postInfo.getPostInfo())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
+    }
+
+    private void uploader_memberInfo(DocumentReference documentReference, final MemberInfo memberInfo) {
+        documentReference.set(memberInfo.getMemberInfo())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

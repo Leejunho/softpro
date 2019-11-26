@@ -1,5 +1,8 @@
 package com.example.myapplication;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MemberInfo {
 
     private String nickname;
@@ -10,10 +13,14 @@ public class MemberInfo {
     private String uid;
     private String usermsg;
     private String token;
+    private String replacenum;
+    private int countpost;
+    private int countmsg;
+    private int countbox;
 
     public MemberInfo() { }
 
-    public MemberInfo(String nickname, String address, String telephone, String photoUrl, int point, String uid, String usermsg, String token) {
+    public MemberInfo(String nickname, String address, String telephone, String photoUrl, int point, String uid, String usermsg, String token, String replacenum, int countpost, int countmsg, int countbox) {
         this.nickname = nickname;
         this.address = address;
         this.telephone = telephone;
@@ -22,9 +29,13 @@ public class MemberInfo {
         this.uid = uid;
         this.usermsg = usermsg;
         this.token = token;
+        this.replacenum = replacenum;
+        this.countpost = countpost;
+        this.countmsg = countmsg;
+        this.countbox = countbox;
     }
 
-    public MemberInfo(String nickname, String address, String telephone, int point, String uid, String usermsg, String token) {
+    public MemberInfo(String nickname, String address, String telephone, int point, String uid, String usermsg, String token, String replacenum, int countpost, int countmsg, int countbox) {
         this.nickname = nickname;
         this.address = address;
         this.telephone = telephone;
@@ -32,6 +43,27 @@ public class MemberInfo {
         this.uid = uid;
         this.usermsg = usermsg;
         this.token = token;
+        this.replacenum = replacenum;
+        this.countpost = countpost;
+        this.countmsg = countmsg;
+        this.countbox = countbox;
+    }
+
+    public Map<String, Object> getMemberInfo() {
+        Map<String, Object> docData = new HashMap<>();
+        docData.put("nickname", nickname);
+        docData.put("address", address);
+        docData.put("telephone", telephone);
+        docData.put("photoUrl", photoUrl);
+        docData.put("point", point);
+        docData.put("uid", uid);
+        docData.put("usermsg", usermsg);
+        docData.put("token", token);
+        docData.put("replacenum", replacenum);
+        docData.put("countpost", countpost);
+        docData.put("countmsg", countmsg);
+        docData.put("countbox", countbox);
+        return docData;
     }
 
     public String getNickname() {
@@ -88,5 +120,33 @@ public class MemberInfo {
     }
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getReplacenum() {
+        return replacenum;
+    }
+    public void setReplacenum(String replacenum) {
+        this.replacenum = replacenum;
+    }
+
+    public int getCountpost() {
+        return this.countpost;
+    }
+    public void setCountpost(int countpost) {
+        this.countpost = countpost;
+    }
+
+    public int getCountmsg() {
+        return this.countmsg;
+    }
+    public void setCountmsg(int countmsg) {
+        this.countmsg = countmsg;
+    }
+
+    public int getCountbox() {
+        return this.countbox;
+    }
+    public void setCountbox(int countbox) {
+        this.countbox = countbox;
     }
 }

@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.myapplication.MemberInfo;
@@ -52,6 +53,11 @@ public class profileActivity extends BasicActivity {
     private RelativeLayout loaderLayout;
     private String photoUrl = null;
     private int point = 0;
+    private String replacenum;
+    private int countpost;
+    private int countmsg;
+    private int countbox;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +98,7 @@ public class profileActivity extends BasicActivity {
                                 ((EditText) findViewById(R.id.editText_nickname)).setText(document.getData().get("nickname").toString());
                                 ((EditText) findViewById(R.id.editText_telephone)).setText(document.getData().get("telephone").toString());
                                 ((EditText) findViewById(R.id.editText_address)).setText(document.getData().get("address").toString());
+                                ((TextView) findViewById(R.id.textView_replacenum)).setText(document.getData().get("replacenum").toString());
                                 if(document.getData().get("point") != null) {
                                     point = ((Long)document.getData().get("point")).intValue();
                                 }
@@ -193,10 +200,28 @@ public class profileActivity extends BasicActivity {
 
             // 사진을 입력하지 않았을 경우 기존 저장되있던 사진이 올라감 없었으면 null 있으면 pictureUrl
             if(profilePath == null) {
-                MemberInfo memberInfo = new MemberInfo(nickname, address, telephone, photoUrl, point, user.getUid(), "...", FirebaseInstanceId.getInstance().getToken());
-                uploader(memberInfo);
-                loaderLayout.setVisibility(View.GONE);
-                showToast(profileActivity.this, "회원 정보 변경에 성공하셨습니다");
+                DocumentReference documentReference = db.collection("users").document(user.getUid());
+                documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document != null) {
+                                if (document.exists()) {
+                                    replacenum = document.getData().get("replacenum").toString();
+                                    countpost = Integer.valueOf(document.getData().get("countpost").toString());
+                                    countmsg = Integer.valueOf(document.getData().get("countmsg").toString());
+                                    countbox = Integer.valueOf(document.getData().get("countbox").toString());
+
+                                    MemberInfo memberInfo = new MemberInfo(nickname, address, telephone, photoUrl, point, user.getUid(), "...", FirebaseInstanceId.getInstance().getToken(), replacenum, countpost, countmsg, countbox);
+                                    uploader(memberInfo);
+                                    loaderLayout.setVisibility(View.GONE);
+                                    showToast(profileActivity.this, "회원 정보 변경에 성공하셨습니다");
+                                }
+                            }
+                        }
+                    }
+                });
             }
             else {
                 try{
@@ -215,11 +240,30 @@ public class profileActivity extends BasicActivity {
                         @Override
                         public void onComplete(@NonNull Task<Uri> task) {
                             if (task.isSuccessful()) {
-                                Uri downloadUri = task.getResult();
-                                MemberInfo memberInfo = new MemberInfo(nickname, address, telephone, downloadUri.toString(), point, user.getUid(), "...", FirebaseInstanceId.getInstance().getToken());
-                                uploader(memberInfo);
-                                loaderLayout.setVisibility(View.GONE);
-                                showToast(profileActivity.this, "회원 정보 변경에 성공하셨습니다");
+                                final Uri downloadUri = task.getResult();
+
+                                DocumentReference documentReference = db.collection("users").document(user.getUid());
+                                documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            DocumentSnapshot document = task.getResult();
+                                            if (document != null) {
+                                                if (document.exists()) {
+                                                    replacenum = document.getData().get("replacenum").toString();
+                                                    countpost = Integer.valueOf(document.getData().get("countpost").toString());
+                                                    countmsg = Integer.valueOf(document.getData().get("countmsg").toString());
+                                                    countbox = Integer.valueOf(document.getData().get("countbox").toString());
+
+                                                    MemberInfo memberInfo = new MemberInfo(nickname, address, telephone, downloadUri.toString(), point, user.getUid(), "...", FirebaseInstanceId.getInstance().getToken(), replacenum, countpost, countmsg, countbox);
+                                                    uploader(memberInfo);
+                                                    loaderLayout.setVisibility(View.GONE);
+                                                    showToast(profileActivity.this, "회원 정보 변경에 성공하셨습니다");
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
                             } else {
                                 loaderLayout.setVisibility(View.GONE);
                                 showToast(profileActivity.this, "회원 정보 전송에 실패하였습니다");

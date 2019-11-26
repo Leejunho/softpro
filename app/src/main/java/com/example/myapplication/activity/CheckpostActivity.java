@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.example.myapplication.MemberInfo;
 import com.example.myapplication.PostInfo;
 import com.example.myapplication.R;
 import com.example.myapplication.fragment.ChatRoomFragment;
@@ -67,19 +68,19 @@ public class CheckpostActivity extends BasicActivity {
         userInit();
     }
 
+
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             switch(v.getId()) {
                 case R.id.button_send:  // 최종입수하기 버튼 클릭했을때 동작
                     // 준영 채팅창 넣을 곳
-                    myStartActivity(SelectUserActivity.class, postInfo);
                     if(postInfo != null) {
                         // consumer에 입수등록한 사람의 uid를 넣음
-                        final DocumentReference documentReference =  db.collection("posts").document(postInfo.getId());
-                        uploader(documentReference, new PostInfo(postInfo.getTitle(), postInfo.getPrice(), postInfo.getTerm(), postInfo.getContents(), postInfo.getPublisher(), postInfo.getCreatedAt(), postInfo.getViewCount(), user.getUid()));
+                        DocumentReference documentReference2 = db.collection("posts").document(postInfo.getId());
+                        uploader(documentReference2, new PostInfo(postInfo.getTitle(), postInfo.getPrice(), postInfo.getTerm(), postInfo.getContents(), postInfo.getPublisher(), postInfo.getCreatedAt(), postInfo.getViewCount(), user.getUid() , postInfo.getRoomID(), postInfo.getCompletepublisher(), postInfo.getCompleteconsumer(), postInfo.getComplete(), postInfo.getBoxnum()));
+
                     }
-                    finish();
                     break;
 
                 case R.id.button_cancel:  // 취소하기 버튼 클릭했을때 동작
@@ -99,12 +100,50 @@ public class CheckpostActivity extends BasicActivity {
                     @Override
                     public void onSuccess(Void aVoid) {
                         showToast(CheckpostActivity.this,"거래를 신청하셨습니다");
+                        updateviewcount();
+                        myStartActivity(SelectUserActivity.class, postInfo);
+                        finish();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         showToast(CheckpostActivity.this,"거래 신청에 실패하셨습니다");
+                    }
+                });
+    }
+
+    private void updateviewcount() {
+        final DocumentReference documentReference = db.collection("users").document(user.getUid());
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document != null) {
+                        if (document.exists()) {
+                            // 게시판 카운트 개수 업데이트
+                            MemberInfo memberInfo = new MemberInfo(document.getData().get("nickname").toString(), document.getData().get("address").toString(), document.getData().get("telephone").toString(), Integer.valueOf(document.getData().get("point").toString()), user.getUid(), document.getData().get("usermsg").toString(), document.getData().get("token").toString(), document.getData().get("replacenum").toString(), Integer.valueOf(document.getData().get("countpost").toString()), Integer.valueOf(document.getData().get("countbox").toString()), Integer.valueOf(document.getData().get("countmsg").toString()) + 1);
+                            uploader_memberInfo(documentReference, memberInfo);
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    private void uploader_memberInfo(DocumentReference documentReference, final MemberInfo memberInfo) {
+        documentReference.set(memberInfo.getMemberInfo())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
                     }
                 });
     }

@@ -10,4 +10,20 @@
     <item
         android:id="@+id/sortbyviewCount"
         android:title="조회순 정렬" />
+
+    <item
+        android:id="@+id/sortbymine"
+        android:title="등록한 게시글" />
+
+    <item
+        android:id="@+id/sortbytrade"
+        android:title="나의 거래 게시글" />
+
+    <item
+        android:id="@+id/sortbyready"
+        android:title="거래 대기 게시글" />
+
+    <item
+        android:id="@+id/sortbyfinish"
+        android:title="거래 종료 게시글" />
 </menu>

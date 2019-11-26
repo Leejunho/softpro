@@ -85,7 +85,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
         final DocumentReference documentReference = postInfo == null ? db.collection("posts").document() : db.collection("posts").document(postInfo.getId());
         // db 저장 함수
-        uploader(documentReference, new PostInfo(postInfo.getTitle(), postInfo.getPrice(), postInfo.getTerm(), postInfo.getContents(), postInfo.getPublisher(), postInfo.getCreatedAt(), postInfo.getViewCount()+1, postInfo.getConsumer()));
+        uploader(documentReference, new PostInfo(postInfo.getTitle(), postInfo.getPrice(), postInfo.getTerm(), postInfo.getContents(), postInfo.getPublisher(), postInfo.getCreatedAt(), postInfo.getId(),postInfo.getViewCount()+1, postInfo.getConsumer(), postInfo.getRoomID(), postInfo.getCompletepublisher(), postInfo.getCompleteconsumer(), postInfo.getComplete(), postInfo.getBoxnum()));
     }
 
     private void uploader(DocumentReference documentReference, final PostInfo postInfo) {
@@ -93,13 +93,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d("!", "onSuccess: ");
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d("!", "onFailure: ");
+
                     }
                 });
     }

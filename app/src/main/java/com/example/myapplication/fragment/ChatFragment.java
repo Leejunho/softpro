@@ -293,6 +293,7 @@ public class ChatFragment extends Fragment {
         Map<String, Object> data = new HashMap<>();
         data.put("title", null);
         data.put("users", users);
+        data.put("complete", "NO");
 
         room.set(data).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -536,6 +537,7 @@ public class ChatFragment extends Fragment {
 
                     MessageInfo message;
                     for (DocumentChange change : documentSnapshots.getDocumentChanges()) {
+
                         switch (change.getType()) {
                             case ADDED:
                                 message = change.getDocument().toObject(MessageInfo.class);

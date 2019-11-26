@@ -20,24 +20,25 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.myapplication.DeliveryInfo;
 import com.example.myapplication.MemberInfo;
 import com.example.myapplication.PostInfo;
 import com.example.myapplication.R;
-import com.example.myapplication.activity.WritePostActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import static com.example.myapplication.Util.showToast;
 
 public class UserListInRoomFragment extends Fragment {
     private String roomID;
@@ -107,7 +108,7 @@ public class UserListInRoomFragment extends Fragment {
 
                                 //uploader(documentReference, new PostInfo(title, price, term, contents, user.getUid(), new Date(), viewCount, ""));
 
-                                Toast.makeText(context, "게시글을 삭제하였습니다", Toast.LENGTH_LONG).show();
+                                Toast.makeText(context, "채팅방을 삭제하였습니다", Toast.LENGTH_LONG).show();
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
@@ -115,14 +116,150 @@ public class UserListInRoomFragment extends Fragment {
                             public void onFailure(@NonNull Exception e) {
                                 //삭제 실패
                                 Context context = container.getContext();
-                                Toast.makeText(context, "게시글을 삭제하지 못하였습니다", Toast.LENGTH_LONG).show();
+                                Toast.makeText(context, "채팅방을 삭제하지 못하였습니다", Toast.LENGTH_LONG).show();
                             }
                         });
 
             }
         });
+        // 택배열수있는 권한 주기 버튼 눌렀을 때
+        view.findViewById(R.id.button_Authority).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                db = FirebaseFirestore.getInstance();
+                DocumentReference documentReference = db.collection("rooms").document(roomID);
+                documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            final DocumentSnapshot document = task.getResult();
+                            if (document != null) {
+                                if (document.exists()) {
+
+                                    DocumentReference documentReference2 = db.collection("posts").document(document.getData().get("postID").toString());
+                                    documentReference2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                DocumentSnapshot document2 = task.getResult();
+                                                if (document2 != null) {
+                                                    if (document2.exists()) {
+
+                                                        DocumentReference documentReference3 = db.collection("users").document(document2.getData().get("publisher").toString());
+                                                        documentReference3.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                                if (task.isSuccessful()) {
+                                                                    DocumentSnapshot document3 = task.getResult();
+                                                                    if (document3 != null) {
+                                                                        if (document3.exists()) {
+                                                                            final DocumentReference documentReference_give = db.collection("delivery").document(document3.getData().get("boxnum").toString());
+                                                                            DocumentReference documentReference4 = db.collection("delivery").document(document3.getData().get("boxnum").toString());
+                                                                            documentReference4.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                                                @Override
+                                                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                                                    if (task.isSuccessful()) {
+                                                                                        DocumentSnapshot document4 = task.getResult();
+                                                                                        if (document4 != null) {
+                                                                                            if (document4.exists()) {
+                                                                                                uploader_deliveryInfo(documentReference_give, new DeliveryInfo(document4.getData().get("telephone").toString(), document4.getData().get("boxnum").toString(), Date.valueOf(document4.getData().get("createdAt").toString()), document4.getData().get("consumertelphone").toString()));
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            });
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        });
+
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    });
+
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
+        // 택배 돌려줄 대체키 받기 눌렀을때
+        view.findViewById(R.id.button_receivenum).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                db = FirebaseFirestore.getInstance();
+                DocumentReference documentReference = db.collection("rooms").document(roomID);
+                documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document != null) {
+                                if (document.exists()) {
+
+                                    DocumentReference documentReference2 = db.collection("posts").document(document.getData().get("postID").toString());
+                                    documentReference2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                DocumentSnapshot document2 = task.getResult();
+                                                if (document2 != null) {
+                                                    if (document2.exists()) {
+
+                                                        DocumentReference documentReference3 = db.collection("users").document(document2.getData().get("publisher").toString());
+                                                        documentReference3.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                                if (task.isSuccessful()) {
+                                                                    DocumentSnapshot document3 = task.getResult();
+                                                                    if (document3 != null) {
+                                                                        if (document3.exists()) {
+                                                                            Context context = container.getContext();
+                                                                            Toast.makeText(context, document3.getData().get("replacenum").toString(), Toast.LENGTH_LONG).show();
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        });
+
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    });
+
+                                }
+                            }
+                        }
+                    }
+                });
+
+
+            }
+        });
 
         return view;
+    }
+
+    private void uploader_deliveryInfo(DocumentReference documentReference, final DeliveryInfo deliveryInfo) {
+        documentReference.set(deliveryInfo.getDeliveryInfo())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
     }
 
     public void setUserList(List<MemberInfo> users) {

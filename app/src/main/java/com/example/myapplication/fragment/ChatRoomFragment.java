@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -123,6 +124,14 @@ public class ChatRoomFragment extends Fragment {
                             TreeMap<Date, ChatRoomModel> orderedRooms = new TreeMap<Date, ChatRoomModel>(Collections.reverseOrder());
 
                             for (final QueryDocumentSnapshot document : value) {
+                                /*
+                                이걸 추가하면 거래 완료된 채팅방들은 숨김
+                                if(document.getData().get("complete") != null) {
+                                    if (document.getData().get("complete").equals("YES")) {
+                                        continue;
+                                    }
+                                }
+                                 */
                                 MessageInfo message = document.toObject(MessageInfo.class);
                                 if (message.getMsg() !=null & message.getTimestamp() == null) {continue;} // FieldValue.serverTimestamp is so late
 

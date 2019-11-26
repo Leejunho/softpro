@@ -10,6 +10,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+
+import com.example.myapplication.MemberInfo;
 import com.example.myapplication.R;
 import com.example.myapplication.PostInfo;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -35,6 +37,7 @@ public class WritePostActivity extends BasicActivity {
     private TextView textView_nickname;
     private TextView textView_telephone;
     private TextView textView_address;
+    private TextView textView_boxnum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,7 @@ public class WritePostActivity extends BasicActivity {
         textView_nickname = (TextView) findViewById(R.id.textView_nickname) ;
         textView_telephone = (TextView) findViewById(R.id.textView_telephone) ;
         textView_address = (TextView) findViewById(R.id.textView_address) ;
+        textView_boxnum = (TextView) findViewById(R.id.textView_boxnum) ;
 
         loaderLayout = findViewById(R.id.loaderLayout);
 
@@ -87,36 +91,85 @@ public class WritePostActivity extends BasicActivity {
         final String title = ((EditText) findViewById(R.id.textView_title)).getText().toString();            // 물품제목
         String p = ((EditText) findViewById(R.id.textView_price)).getText().toString();
         if(p.length() < 0) {
-            Log.d(String.valueOf(p.length()), "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ");
-            showToast(WritePostActivity.this, "정보를 입력해 주세요");
+            showToast(WritePostActivity.this, "가격 정보를 입력해 주세요");
+            return;
+        }
+        String p2 = ((EditText) findViewById(R.id.textView_boxnum)).getText().toString();
+        if(p2.length() < 0) {
+            showToast(WritePostActivity.this, "택배함 번호를 입력해 주세요");
             return;
         }
         final int price = Integer.parseInt(p);                                                               // 가격
+        final int boxnum = Integer.parseInt(p2);                                                               // 택배함번호
         final String term = ((EditText) findViewById(R.id.textView_term)).getText().toString();              // 기간
         final String contents = ((EditText) findViewById(R.id.textView_contents)).getText().toString();      // 내용
-        int viewCount = 0;
-        if (title.length() > 0 && price >= 0 && term.length() > 0) {
-            loaderLayout.setVisibility(View.VISIBLE);
-            user = FirebaseAuth.getInstance().getCurrentUser();
-            db = FirebaseFirestore.getInstance();
 
-            final DocumentReference documentReference = postInfo == null ? db.collection("posts").document() : db.collection("posts").document(postInfo.getId());
-            //final Date date = postInfo == null ? new Date() : postInfo.getCreatedAt();
+        DocumentReference documentReference = db.collection("users").document(user.getUid());
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    final DocumentSnapshot document = task.getResult();
+                    if (document != null) {
+                        if (document.exists()) {
+                            DocumentReference documentReference2 = db.collection("delivery").document(String.valueOf(boxnum));
+                            documentReference2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        DocumentSnapshot document2 = task.getResult();
+                                        if (document2 != null) {
+                                            if (document2.exists()) {
+                                                // 유저가 작성한 택배함 번호에 해당하는 정보를 가지고 잇는지 확인
+                                                //               택배함의 전화번호                                  현재 유저 전화번호
+                                                if(document2.getData().get("telephone").toString().equals(document.getData().get("telephone").toString())) {
+                                                    if (title.length() > 0 && price >= 0 && term.length() > 0) {
+                                                        loaderLayout.setVisibility(View.VISIBLE);
+                                                        user = FirebaseAuth.getInstance().getCurrentUser();
+                                                        db = FirebaseFirestore.getInstance();
 
-            // Firebase db에 정보들을 저장하기 위해 값들을 받아옴
-            if (contents.length() == 0) {
-                postInfo.setContents("내용없음");
+                                                        final DocumentReference documentReference = postInfo == null ? db.collection("posts").document() : db.collection("posts").document(postInfo.getId());
+                                                        //final Date date = postInfo == null ? new Date() : postInfo.getCreatedAt();
+
+                                                        // Firebase db에 정보들을 저장하기 위해 값들을 받아옴
+                                                        if (contents.length() == 0) {
+                                                            postInfo.setContents("내용없음");
+                                                        }
+
+                                                        int viewCount = 0;
+                                                        String consumerblank = "";
+                                                        String roomidblank = "";
+                                                        String completePublisher = "NO";
+                                                        String completeComsumer = "NO";
+                                                        String complete = "NO";
+                                                        if (postInfo != null) {
+                                                            viewCount = postInfo.getViewCount();
+                                                            consumerblank = postInfo.getConsumer();
+                                                            roomidblank = postInfo.getRoomID();
+                                                            completePublisher = postInfo.getCompletepublisher();
+                                                            completeComsumer = postInfo.getCompleteconsumer();
+                                                            complete = postInfo.getComplete();
+                                                        }
+
+                                                        // db 저장 함수
+
+                                                        uploader(documentReference, new PostInfo(title, price, term, contents, user.getUid(), new Date(), viewCount, consumerblank, roomidblank, completePublisher, completeComsumer, complete, boxnum));
+                                                    }
+                                                    else {
+                                                        showToast(WritePostActivity.this, "정보를 입력해 주세요");
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
             }
+        });
 
-            if(postInfo != null) {
-                viewCount = postInfo.getViewCount();
-            }
-
-            // db 저장 함수
-            uploader(documentReference, new PostInfo(title, price, term, contents, user.getUid(), new Date(), viewCount, ""));
-        } else {
-            showToast(WritePostActivity.this, "정보를 입력해 주세요");
-        }
     }
 
     private void uploader(DocumentReference documentReference, final PostInfo postInfo) {
@@ -126,6 +179,9 @@ public class WritePostActivity extends BasicActivity {
                 public void onSuccess(Void aVoid) {
                     loaderLayout.setVisibility(View.GONE);
                     showToast(WritePostActivity.this,"게시글 등록에 성공하셨습니다");
+                    // view count 새로 갱신
+                    updateviewcount();
+
                     // 게시판 새로 갱신
                     Intent intent = new Intent();
                     intent.putExtra("postInfo", postInfo);
@@ -140,6 +196,41 @@ public class WritePostActivity extends BasicActivity {
                     showToast(WritePostActivity.this,"게시글 등록에 실패하셨습니다");
                 }
             });
+    }
+
+    private void updateviewcount() {
+        final DocumentReference documentReference = db.collection("users").document(user.getUid());
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document != null) {
+                        if (document.exists()) {
+                            // 게시판 카운트 개수 업데이트
+                            MemberInfo memberInfo = new MemberInfo(document.getData().get("nickname").toString(), document.getData().get("address").toString(), document.getData().get("telephone").toString(), Integer.valueOf(document.getData().get("point").toString()), user.getUid(), document.getData().get("usermsg").toString(), document.getData().get("token").toString(), document.getData().get("replacenum").toString(), Integer.valueOf(document.getData().get("countpost").toString()) + 1, Integer.valueOf(document.getData().get("countbox").toString()), Integer.valueOf(document.getData().get("countmsg").toString()));
+                            uploader_memberInfo(documentReference, memberInfo);
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    private void uploader_memberInfo(DocumentReference documentReference, final MemberInfo memberInfo) {
+        documentReference.set(memberInfo.getMemberInfo())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
     }
 
     private void postInit() {

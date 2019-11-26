@@ -2,6 +2,7 @@ package com.example.myapplication.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -58,6 +59,7 @@ public class NoticeboardActivity extends BasicActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        postAdapter.notifyDataSetChanged();
         postUpdate();
     }
 
@@ -86,6 +88,7 @@ public class NoticeboardActivity extends BasicActivity {
                             if (task.isSuccessful()) {
                                 postList.clear();
                                 for (QueryDocumentSnapshot document : task.getResult()) {
+                                    String did = document.getData().get("id") == null ? document.getId() : document.getData().get("id").toString();
                                     postList.add(new PostInfo(
                                             // db에 저장되어있는 게시판 작성의 값들을 postList에 저장
                                             document.getData().get("title").toString(),
@@ -94,10 +97,169 @@ public class NoticeboardActivity extends BasicActivity {
                                             document.getData().get("contents").toString(),
                                             document.getData().get("publisher").toString(),
                                             new Date(document.getDate("createdAt").getTime()),
-                                            document.getId(),
-                                            ((Long)document.getData().get("viewCount")).intValue(),
-                                            document.getData().get("consumer").toString()
+                                            did,
+                                            ((Long) document.getData().get("viewCount")).intValue(),
+                                            document.getData().get("consumer").toString(),
+                                            document.getData().get("roomID").toString(),
+                                            document.getData().get("completepublisher").toString(),
+                                            document.getData().get("completeconsumer").toString(),
+                                            document.getData().get("complete").toString(),
+                                            ((Long) document.getData().get("boxnum")).intValue()
                                     ));
+
+                                }
+                                postAdapter.notifyDataSetChanged();
+                            }
+                        }
+                    });
+        }
+    }
+
+    private void postUpdateIsmine() {
+        if(user != null) {
+            CollectionReference collectionReference = db.collection("posts");
+            collectionReference.orderBy("createdAt", Query.Direction.DESCENDING).get()  // 시간순으로 내림차순 정렬하여 게시판에 보여줌
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                postList.clear();
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    if(document.getData().get("publisher").toString().equals(user.getUid())) {
+                                        String did = document.getData().get("id") == null ? document.getId() : document.getData().get("id").toString();
+                                        postList.add(new PostInfo(
+                                                // db에 저장되어있는 게시판 작성의 값들을 postList에 저장
+                                                document.getData().get("title").toString(),
+                                                Integer.parseInt(document.getData().get("price").toString()),
+                                                document.getData().get("term").toString(),
+                                                document.getData().get("contents").toString(),
+                                                document.getData().get("publisher").toString(),
+                                                new Date(document.getDate("createdAt").getTime()),
+                                                did,
+                                                ((Long) document.getData().get("viewCount")).intValue(),
+                                                document.getData().get("consumer").toString(),
+                                                document.getData().get("roomID").toString(),
+                                                document.getData().get("completepublisher").toString(),
+                                                document.getData().get("completeconsumer").toString(),
+                                                document.getData().get("complete").toString(),
+                                                ((Long) document.getData().get("boxnum")).intValue()
+                                        ));
+
+                                    }
+                                }
+                                postAdapter.notifyDataSetChanged();
+                            }
+                        }
+                    });
+        }
+    }
+
+    private void postUpdatecurrentTrade() {
+        if(user != null) {
+            CollectionReference collectionReference = db.collection("posts");
+            collectionReference.orderBy("createdAt", Query.Direction.DESCENDING).get()  // 시간순으로 내림차순 정렬하여 게시판에 보여줌
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                postList.clear();
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    if(document.getData().get("publisher").toString().equals(user.getUid()) || document.getData().get("consumer").toString().equals(user.getUid())) {
+                                        String did = document.getData().get("id") == null ? document.getId() : document.getData().get("id").toString();
+                                        postList.add(new PostInfo(
+                                                // db에 저장되어있는 게시판 작성의 값들을 postList에 저장
+                                                document.getData().get("title").toString(),
+                                                Integer.parseInt(document.getData().get("price").toString()),
+                                                document.getData().get("term").toString(),
+                                                document.getData().get("contents").toString(),
+                                                document.getData().get("publisher").toString(),
+                                                new Date(document.getDate("createdAt").getTime()),
+                                                did,
+                                                ((Long) document.getData().get("viewCount")).intValue(),
+                                                document.getData().get("consumer").toString(),
+                                                document.getData().get("roomID").toString(),
+                                                document.getData().get("completepublisher").toString(),
+                                                document.getData().get("completeconsumer").toString(),
+                                                document.getData().get("complete").toString(),
+                                                ((Long) document.getData().get("boxnum")).intValue()
+                                        ));
+                                    }
+                                }
+                                postAdapter.notifyDataSetChanged();
+                            }
+                        }
+                    });
+        }
+    }
+
+    private void postreadyTrade() {
+        if(user != null) {
+            CollectionReference collectionReference = db.collection("posts");
+            collectionReference.orderBy("createdAt", Query.Direction.DESCENDING).get()  // 시간순으로 내림차순 정렬하여 게시판에 보여줌
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                postList.clear();
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    if(document.getData().get("roomID").toString().equals("")) {
+                                        String did = document.getData().get("id") == null ? document.getId() : document.getData().get("id").toString();
+                                        postList.add(new PostInfo(
+                                                // db에 저장되어있는 게시판 작성의 값들을 postList에 저장
+                                                document.getData().get("title").toString(),
+                                                Integer.parseInt(document.getData().get("price").toString()),
+                                                document.getData().get("term").toString(),
+                                                document.getData().get("contents").toString(),
+                                                document.getData().get("publisher").toString(),
+                                                new Date(document.getDate("createdAt").getTime()),
+                                                did,
+                                                ((Long) document.getData().get("viewCount")).intValue(),
+                                                document.getData().get("consumer").toString(),
+                                                document.getData().get("roomID").toString(),
+                                                document.getData().get("completepublisher").toString(),
+                                                document.getData().get("completeconsumer").toString(),
+                                                document.getData().get("complete").toString(),
+                                                ((Long) document.getData().get("boxnum")).intValue()
+                                        ));
+                                    }
+                                }
+                                postAdapter.notifyDataSetChanged();
+                            }
+                        }
+                    });
+        }
+    }
+
+    private void postfinishTrade() {
+        if(user != null) {
+            CollectionReference collectionReference = db.collection("posts");
+            collectionReference.orderBy("createdAt", Query.Direction.DESCENDING).get()  // 시간순으로 내림차순 정렬하여 게시판에 보여줌
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                postList.clear();
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    if(document.getData().get("complete").toString().equals("YES")) {
+                                        String did = document.getData().get("id") == null ? document.getId() : document.getData().get("id").toString();
+                                        postList.add(new PostInfo(
+                                                // db에 저장되어있는 게시판 작성의 값들을 postList에 저장
+                                                document.getData().get("title").toString(),
+                                                Integer.parseInt(document.getData().get("price").toString()),
+                                                document.getData().get("term").toString(),
+                                                document.getData().get("contents").toString(),
+                                                document.getData().get("publisher").toString(),
+                                                new Date(document.getDate("createdAt").getTime()),
+                                                did,
+                                                ((Long) document.getData().get("viewCount")).intValue(),
+                                                document.getData().get("consumer").toString(),
+                                                document.getData().get("roomID").toString(),
+                                                document.getData().get("completepublisher").toString(),
+                                                document.getData().get("completeconsumer").toString(),
+                                                document.getData().get("complete").toString(),
+                                                ((Long) document.getData().get("boxnum")).intValue()
+                                        ));
+                                    }
                                 }
                                 postAdapter.notifyDataSetChanged();
                             }
@@ -131,6 +293,26 @@ public class NoticeboardActivity extends BasicActivity {
                         // 금액순 정렬
                         name = "viewCount";
                         postUpdate();
+                        break;
+
+                    case R.id.sortbymine:
+                        // 자기가 등록한 글만 보이게
+                        postUpdateIsmine();
+                        break;
+
+                    case R.id.sortbytrade:
+                        // 자신이 거래 중인 게시판만 보이게
+                        postUpdatecurrentTrade();
+                        break;
+
+                    case R.id.sortbyready:
+                        // 거래 대기중인 게시글만 보이게
+                        postreadyTrade();
+                        break;
+
+                    case R.id.sortbyfinish:
+                        // 거래 완료된 게시글만 보이게
+                        postfinishTrade();
                         break;
                 }
                 return false;

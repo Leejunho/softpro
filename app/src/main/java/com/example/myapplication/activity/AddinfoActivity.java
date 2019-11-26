@@ -3,7 +3,6 @@ package com.example.myapplication.activity;
 import androidx.annotation.NonNull;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -15,20 +14,24 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.storage.FirebaseStorage;
+
+import java.util.Random;
 
 import static com.example.myapplication.Util.showToast;
 
 
 public class AddinfoActivity extends BasicActivity {
-    private static final String TAG = "addInfoActivity";
     private FirebaseUser user;
+    private FirebaseFirestore db;
     private RelativeLayout loaderLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addinfo);
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        db = FirebaseFirestore.getInstance();
 
         findViewById(R.id.button_input).setOnClickListener(onClickListener);
 
@@ -51,6 +54,7 @@ public class AddinfoActivity extends BasicActivity {
     };
 
     private void profile_add() {
+        //  추가 정보를 입력
         final String nickname = ((EditText)findViewById(R.id.editText_nickname)).getText().toString();
         final String address = ((EditText)findViewById(R.id.editText_address)).getText().toString();
         final String telephone = ((EditText)findViewById(R.id.editText_telephone)).getText().toString();
@@ -58,19 +62,19 @@ public class AddinfoActivity extends BasicActivity {
         if(nickname.length() > 0 && address.length() > 0 && telephone.length() > 9) {
             loaderLayout.setVisibility(View.VISIBLE);
 
-            FirebaseStorage storage = FirebaseStorage.getInstance();
-            user = FirebaseAuth.getInstance().getCurrentUser();
+            Random rnd = new Random();
+            int num = rnd.nextInt(2100000000);
+            final String replacenum = "#" + num;    // 대체키 번호
 
-            MemberInfo memberInfo = new MemberInfo(nickname, address, telephone, 0, user.getUid(), "...", FirebaseInstanceId.getInstance().getToken());
-            uploader(memberInfo);
+
+            uploader(new MemberInfo(nickname, address, telephone, 0, user.getUid(), "...", FirebaseInstanceId.getInstance().getToken(), replacenum, 0, 0, 0));
         }
         else {
             showToast(AddinfoActivity.this, "회원 정보를 입력해 주세요");
         }
     }
 
-    private void uploader(MemberInfo memberInfo) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private void uploader(final MemberInfo memberInfo) {
         db.collection("users").document(user.getUid()).set(memberInfo)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -86,7 +90,6 @@ public class AddinfoActivity extends BasicActivity {
                     public void onFailure(@NonNull Exception e) {
                         showToast(AddinfoActivity.this,"회원정보 등록에 실패하였습니다");
                         loaderLayout.setVisibility(View.GONE);
-                        Log.w(TAG, "Error writing document", e);
                     }
                 });
     }

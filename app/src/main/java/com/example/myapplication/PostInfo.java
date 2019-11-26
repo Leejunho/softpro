@@ -16,9 +16,16 @@ public class PostInfo implements Serializable {
     private String id;
     private int viewCount;
     private String consumer;
+    private String roomID;
+    private String completepublisher;
+    private String completeconsumer;
+    private String complete;
+    private int boxnum;
 
 
-    public PostInfo(String title, int price, String term, String contents, String publisher, Date createdAt, String id, int viewCount, String consumer) {
+
+
+    public PostInfo(String title, int price, String term, String contents, String publisher, Date createdAt, String id, int viewCount, String consumer, String roomID, String completepublisher, String completeconsumer, String complete, int boxnum) {
         this.title = title;
         this.price = price;
         this.term = term;
@@ -28,9 +35,14 @@ public class PostInfo implements Serializable {
         this.id = id;
         this.viewCount = viewCount;
         this.consumer = consumer;
+        this.roomID = roomID;
+        this.completepublisher = completepublisher;
+        this.completeconsumer = completeconsumer;
+        this.complete = complete;
+        this.boxnum = boxnum;
     }
 
-    public PostInfo(String title, int price, String term, String contents, String publisher, Date createdAt, int viewCount, String consumer) {
+    public PostInfo(String title, int price, String term, String contents, String publisher, Date createdAt, int viewCount, String consumer, String roomID, String completepublisher, String completeconsumer, String complete, int boxnum) {
         this.title = title;
         this.price = price;
         this.term = term;
@@ -39,6 +51,11 @@ public class PostInfo implements Serializable {
         this.createdAt = createdAt;
         this.viewCount = viewCount;
         this.consumer = consumer;
+        this.roomID = roomID;
+        this.completepublisher = completepublisher;
+        this.completeconsumer = completeconsumer;
+        this.complete = complete;
+        this.boxnum = boxnum;
     }
 
     public Map<String, Object> getPostInfo() {
@@ -51,6 +68,12 @@ public class PostInfo implements Serializable {
         docData.put("createdAt", createdAt);
         docData.put("viewCount", viewCount);
         docData.put("consumer", consumer);
+        docData.put("roomID", roomID);
+        docData.put("completepublisher", completepublisher);
+        docData.put("completeconsumer", completeconsumer);
+        docData.put("complete", complete);
+        docData.put("id", id);
+        docData.put("boxnum", boxnum);
         return docData;
     }
 
@@ -115,5 +138,40 @@ public class PostInfo implements Serializable {
     }
     public void setConsumer(String consumer) {
         this.consumer = consumer;
+    }
+
+    public String getRoomID() {
+        return this.roomID;
+    }
+    public void setRoomID(String roomID) {
+        this.roomID = roomID;
+    }
+
+    public String getCompletepublisher() {
+        return this.completepublisher;
+    }
+    public void setCompletepublisher(String completepublisher) {
+        this.completepublisher = completepublisher;
+    }
+
+    public String getCompleteconsumer() {
+        return this.completeconsumer;
+    }
+    public void setCompleteconsumer(String completeconsumer) {
+        this.completeconsumer = completeconsumer;
+    }
+
+    public String getComplete() {
+        return this.complete;
+    }
+    public void setComplete(String complete) {
+        this.complete = complete;
+    }
+
+    public int getBoxnum() {
+        return this.boxnum;
+    }
+    public void setBoxnum(int boxnum) {
+        this.boxnum = boxnum;
     }
 }
