@@ -159,6 +159,9 @@ public class WritePostActivity extends BasicActivity {
                                                         showToast(WritePostActivity.this, "정보를 입력해 주세요");
                                                     }
                                                 }
+                                                else {
+                                                    showToast(WritePostActivity.this, "본인의 택배함 번호를 입력해 주십시오");
+                                                }
                                             }
                                         }
                                     }

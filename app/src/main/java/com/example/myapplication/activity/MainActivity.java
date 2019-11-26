@@ -168,9 +168,9 @@ public class MainActivity extends BasicActivity {
                             if(currentcountpost- lastcountpost > 0) {
                                 String numberstr = String.valueOf(currentcountpost- lastcountpost);
                                 int numlength = numberstr.length()+1;
-                                String str = "게시판" + " +" + (currentcountpost- lastcountpost);
+                                String str = "거래 게시판" + " +" + (currentcountpost- lastcountpost);
                                 SpannableStringBuilder ssb = new SpannableStringBuilder(str);
-                                ssb.setSpan(new ForegroundColorSpan(Color.parseColor("#FA0000")), 4, 4 + numlength, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                ssb.setSpan(new ForegroundColorSpan(Color.parseColor("#FA0000")), 7, 7 + numlength, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                                 textView_posts.setText(ssb);
                             }

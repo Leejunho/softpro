@@ -98,7 +98,7 @@ public class profileActivity extends BasicActivity {
                                 ((EditText) findViewById(R.id.editText_nickname)).setText(document.getData().get("nickname").toString());
                                 ((EditText) findViewById(R.id.editText_telephone)).setText(document.getData().get("telephone").toString());
                                 ((EditText) findViewById(R.id.editText_address)).setText(document.getData().get("address").toString());
-                                ((TextView) findViewById(R.id.textView_replacenum)).setText(document.getData().get("replacenum").toString());
+
                                 if(document.getData().get("point") != null) {
                                     point = ((Long)document.getData().get("point")).intValue();
                                 }

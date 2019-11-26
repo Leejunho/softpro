@@ -3,6 +3,7 @@ package com.example.myapplication.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,13 +29,18 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.model.value.TimestampValue;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.sql.Date;
+import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +51,7 @@ public class UserListInRoomFragment extends Fragment {
     private List<MemberInfo> userModels;
     private RecyclerView recyclerView;
     private FirebaseFirestore db;
+    private FirebaseUser user;
 
     public UserListInRoomFragment() {
     }
@@ -141,39 +148,49 @@ public class UserListInRoomFragment extends Fragment {
                                         @Override
                                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                             if (task.isSuccessful()) {
-                                                DocumentSnapshot document2 = task.getResult();
+                                                final DocumentSnapshot document2 = task.getResult();
                                                 if (document2 != null) {
                                                     if (document2.exists()) {
+                                                        user = FirebaseAuth.getInstance().getCurrentUser();
+                                                        if(!document2.getData().get("publisher").toString().equals(user.getUid())) {
+                                                            Context context = container.getContext();
+                                                            Toast.makeText(context, "권한이 없습니다", Toast.LENGTH_LONG).show();
+                                                        }
+                                                        else {
+                                                            final DocumentReference documentReference_give = db.collection("delivery").document(document2.getData().get("boxnum").toString());
+                                                            DocumentReference documentReference4 = db.collection("delivery").document(document2.getData().get("boxnum").toString());
+                                                            documentReference4.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                                    if (task.isSuccessful()) {
+                                                                        final DocumentSnapshot document4 = task.getResult();
+                                                                        if (document4 != null) {
+                                                                            if (document4.exists()) {
+                                                                                Log.d("1", "11111111111111111111111111: ");
 
-                                                        DocumentReference documentReference3 = db.collection("users").document(document2.getData().get("publisher").toString());
-                                                        documentReference3.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                                if (task.isSuccessful()) {
-                                                                    DocumentSnapshot document3 = task.getResult();
-                                                                    if (document3 != null) {
-                                                                        if (document3.exists()) {
-                                                                            final DocumentReference documentReference_give = db.collection("delivery").document(document3.getData().get("boxnum").toString());
-                                                                            DocumentReference documentReference4 = db.collection("delivery").document(document3.getData().get("boxnum").toString());
-                                                                            documentReference4.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                                                                @Override
-                                                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                                                    if (task.isSuccessful()) {
-                                                                                        DocumentSnapshot document4 = task.getResult();
-                                                                                        if (document4 != null) {
-                                                                                            if (document4.exists()) {
-                                                                                                uploader_deliveryInfo(documentReference_give, new DeliveryInfo(document4.getData().get("telephone").toString(), document4.getData().get("boxnum").toString(), Date.valueOf(document4.getData().get("createdAt").toString()), document4.getData().get("consumertelphone").toString()));
+                                                                                DocumentReference documentReference5 = db.collection("users").document(document2.getData().get("publisher").toString());
+                                                                                documentReference5.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                                                    @Override
+                                                                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                                                        if (task.isSuccessful()) {
+                                                                                            DocumentSnapshot document5 = task.getResult();
+                                                                                            if (document5 != null) {
+                                                                                                if (document5.exists()) {
+                                                                                                    uploader_deliveryInfo(documentReference_give, new DeliveryInfo(document4.getData().get("telephone").toString(), document4.getData().get("boxnum").toString(), document4.getTimestamp("createdAt").toDate(), document5.getData().get("replacenum").toString()));
+                                                                                                    Context context = container.getContext();
+                                                                                                    Toast.makeText(context, "상대에게 권한을 부여하였습니다", Toast.LENGTH_LONG).show();
+                                                                                                }
                                                                                             }
                                                                                         }
                                                                                     }
-                                                                                }
-                                                                            });
+                                                                                });
+
+                                                                            }
                                                                         }
                                                                     }
                                                                 }
-                                                            }
-                                                        });
-
+                                                            });
+                                                        }
                                                     }
                                                 }
                                             }

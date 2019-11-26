@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import com.example.myapplication.MemberInfo;
 import com.example.myapplication.PostInfo;
 import com.example.myapplication.R;
-import com.example.myapplication.fragment.ChatRoomFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -24,7 +23,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 
 import static com.example.myapplication.Util.showToast;

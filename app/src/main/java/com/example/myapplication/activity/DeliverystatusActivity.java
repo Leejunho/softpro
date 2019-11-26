@@ -61,6 +61,7 @@ public class DeliverystatusActivity extends BasicActivity {
     private ArrayList<DeliveryInfo> deliveryList;
     private String currentusertelephone = "nuuuull";
     private String currentuserreplacenum = "nuuuull";
+    private String consumertelphone = "nuuuull";
 
 
 
@@ -240,14 +241,16 @@ public class DeliverystatusActivity extends BasicActivity {
                             if (task.isSuccessful()) {
                                 deliveryList.clear();
                                 for (QueryDocumentSnapshot document : task.getResult()) {
-                                    // 현재 사용자 전화번호와 택배함 전화번호가 일치하는 것들만 보여줌
-                                     if(currentusertelephone.equals(document.getData().get("telephone").toString()) || currentuserreplacenum.equals(document.getData().get("telephone").toString())) {
-                                        deliveryList.add(new DeliveryInfo(
+                                    // 현재 사용자 전화번호와 택배함 전화번호가 일치하는 것들만 보여줌   또는 자신에게 권한이 있으면 보여줌
+                                     if(currentusertelephone.equals(document.getData().get("telephone").toString()) || currentuserreplacenum.equals(document.getData().get("telephone").toString()) || consumertelphone.equals(document.getData().get("telephone").toString())) {
+                                         if(document.getData().get("consumertelphone") != null) consumertelphone = document.getData().get("consumertelphone").toString();
+                                         else consumertelphone = "";
+                                         deliveryList.add(new DeliveryInfo(
                                                 // db에 저장되어있는 게시판 작성의 값들을 postList에 저장
                                                 document.getData().get("telephone").toString(),
                                                 document.getData().get("boxnum").toString(),
                                                 new Date(document.getDate("createdAt").getTime()),
-                                                document.getData().get("consumertelphone").toString()
+                                                 consumertelphone
                                         ));
                                     }
                                 }
@@ -334,6 +337,7 @@ public class DeliverystatusActivity extends BasicActivity {
                             if (document.exists()) {
                                 currentusertelephone = document.getData().get("telephone").toString();
                                 currentuserreplacenum = document.getData().get("replacenum").toString();
+                                if(document.getData().get("consumertelphone") != null) consumertelphone = document.getData().get("consumertelphone").toString();
                             }
                         }
                     }

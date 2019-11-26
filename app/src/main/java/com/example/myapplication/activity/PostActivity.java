@@ -1,5 +1,6 @@
 package com.example.myapplication.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,9 +9,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.myapplication.DeliveryInfo;
 import com.example.myapplication.MemberInfo;
 import com.example.myapplication.PostInfo;
 import com.example.myapplication.R;
@@ -26,6 +29,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Locale;
@@ -94,7 +98,7 @@ public class PostActivity extends BasicActivity {
         textView_currentprogress = findViewById(R.id.textView_currentprogress);
         textView_ipoint = findViewById(R.id.textView_ipoint);
         textView_inickname = findViewById(R.id.textView_inickname);
-        textView_iboxnum = findViewById(R.id.textView_inickname);
+        textView_iboxnum = findViewById(R.id.textView_iboxnum);
 
         setTextinvalues();
 
@@ -112,7 +116,6 @@ public class PostActivity extends BasicActivity {
         findViewById(R.id.button_recommend).setVisibility(View.GONE);
         postInfo = (PostInfo)getIntent().getSerializableExtra("postInfo");
 
-        Log.d("zzzzzz", "zzzzzzzzzzzzzzzzzzzzzzzzzzzz: ");
         if(!checktradefinish()) {
             checkauthority();
         }
@@ -242,12 +245,13 @@ public class PostActivity extends BasicActivity {
                             textView_inickname.setText(document.getData().get("nickname").toString());
                             // 거래점수
                             textView_ipoint.setText(document.getData().get("point").toString() + "점");
-                            textView_iboxnum.setText(document.getData().get("boxnum").toString());
                         }
                     }
                 }
             }
         });
+        // 택배함 번호
+        textView_iboxnum.setText(String.valueOf(postInfo.getBoxnum()));
     }
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -339,7 +343,24 @@ public class PostActivity extends BasicActivity {
                             });
                     */
 
-                    // postinfo 거래 진행중 정보 삭제
+                    // 택배함 정보에서
+                    final DocumentReference documentReference_boxnum = db.collection("delivery").document(String.valueOf(postInfo.getBoxnum()));
+                    documentReference_boxnum.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document_boxnum = task.getResult();
+                                if (document_boxnum != null) {
+                                    if (document_boxnum.exists()) {
+                                        uploader_deliveryInfo(documentReference_boxnum, new DeliveryInfo(document_boxnum.getData().get("telephone").toString(), document_boxnum.getData().get("boxnum").toString(), document_boxnum.getTimestamp("createdAt").toDate(), ""));
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+
+                        // postinfo 거래 진행중 정보 삭제
                     DocumentReference documentReference_cancel = db.collection("posts").document(postInfo.getId());
                     uploader_postInfo(documentReference_cancel, new PostInfo(postInfo.getTitle(), postInfo.getPrice(), postInfo.getTerm(), postInfo.getContents(), postInfo.getPublisher(), postInfo.getCreatedAt(), postInfo.getViewCount(), "", "", "NO", "NO", "NO", postInfo.getBoxnum()));
                     showToast(PostActivity.this, "거래를 취소하였습니다.");
@@ -430,6 +451,22 @@ public class PostActivity extends BasicActivity {
 
     private void uploader_memberInfo(DocumentReference documentReference, final MemberInfo memberInfo) {
         documentReference.set(memberInfo.getMemberInfo())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
+    }
+
+    private void uploader_deliveryInfo(DocumentReference documentReference, final DeliveryInfo deliveryInfo) {
+        documentReference.set(deliveryInfo.getDeliveryInfo())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

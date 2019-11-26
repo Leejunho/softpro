@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:gravity="center"
-        android:text="회원가입"
-        android:textColor="#000000"
-        android:textSize="24sp" />
+    <ImageView
+        android:id="@+id/imageView7"
+        android:layout_width="320dp"
+        android:layout_height="95dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="70dp"
+        android:foregroundGravity="bottom"
+        app:srcCompat="@drawable/img_logo" />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="365dp"
+        android:layout_height="410dp"
+        android:layout_gravity="center_horizontal"
         android:layout_marginBottom="5dp"
         android:orientation="vertical"
         android:padding="10dp">
@@ -24,6 +28,8 @@
             android:id="@+id/editText_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="5dp"
             android:ems="10"
             android:hint="이메일"
             android:inputType="textEmailAddress" />
@@ -32,6 +38,7 @@
             android:id="@+id/editText_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:ems="10"
             android:hint="비밀번호"
             android:inputType="textPassword" />
@@ -40,22 +47,25 @@
             android:id="@+id/editText_passwordcheck"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
             android:ems="10"
             android:hint="비밀번호 확인"
             android:inputType="textPassword" />
 
         <Button
             android:id="@+id/button_signup"
-            android:layout_width="393dp"
-            android:layout_height="38dp"
+            android:layout_width="match_parent"
+            android:layout_height="37dp"
+            android:layout_marginBottom="60dp"
             android:background="@drawable/ic_button_field"
             android:text="회원가입"
             android:textColor="#FFFFFF" />
+
     </LinearLayout>
 
     <include
         layout="@layout/view_loader"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 </LinearLayout>

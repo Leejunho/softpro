@@ -96,14 +96,15 @@ public class SelectUserActivity extends BasicActivity {
                                     postinfoid = document.getId();
 
                                     DocumentReference documentReference2 = db.collection("posts").document(postinfoid);
-                                    uploader(documentReference2, new PostInfo(postInfo.getTitle(), postInfo.getPrice(), postInfo.getTerm(), postInfo.getContents(), postInfo.getPublisher(), postInfo.getCreatedAt(), postinfoid, postInfo.getViewCount(), postInfo.getConsumer(), newRoom.getId(), postInfo.getCompletepublisher(), postInfo.getCompleteconsumer(), postInfo.getComplete(), postInfo.getBoxnum()), newRoom);
+                                    PostInfo postInfo2 = new PostInfo(postInfo.getTitle(), postInfo.getPrice(), postInfo.getTerm(), postInfo.getContents(), postInfo.getPublisher(), postInfo.getCreatedAt(), postinfoid, postInfo.getViewCount(), postInfo.getConsumer(), newRoom.getId(), postInfo.getCompletepublisher(), postInfo.getCompleteconsumer(), postInfo.getComplete(), postInfo.getBoxnum());
+                                    uploader(documentReference2, postInfo2, newRoom);
                                 }
                             }
                         }
                     });
         }
         else {  // 채팅방이 이미 있는 상태인 경우  -> 이거 안씀
-            CreateChattingRoom(FirebaseFirestore.getInstance().collection("rooms").document(roomID) );
+            //CreateChattingRoom(FirebaseFirestore.getInstance().collection("rooms").document(roomID) );
         }
     }
 
@@ -112,7 +113,7 @@ public class SelectUserActivity extends BasicActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        CreateChattingRoom(newRoom);
+                        CreateChattingRoom(postInfo, newRoom);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -124,7 +125,7 @@ public class SelectUserActivity extends BasicActivity {
     }
 
 
-    public void CreateChattingRoom(final DocumentReference room) {
+    public void CreateChattingRoom(final PostInfo postInfo, final DocumentReference room) {
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Map<String, Integer> users = new HashMap<>();
         String title = "";  // 채팅방 제목
@@ -144,7 +145,6 @@ public class SelectUserActivity extends BasicActivity {
         data.put("users", users);
         data.put("complete", "NO");
         data.put("postID", postInfo.getId());
-        Log.d(postInfo.getId(), "postInfo.getId()postInfo.getId()postInfo.getId()postInfo.getId(): ");
 
         room.set(data).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
