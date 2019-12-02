@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.activity_login_login"
+    tools:layout_editor_absoluteY="25dp">
+
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="0dp"
+        android:layout_height="144dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="92dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/img_logo" />
+
+    <EditText
+        android:id="@+id/username"
+        android:layout_width="344dp"
+        android:layout_height="38dp"
+        android:layout_marginTop="297dp"
+        android:ems="10"
+        android:hint="이메일"
+        android:inputType="textEmailAddress"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/password"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="344dp"
+        android:layout_height="38dp"
+        android:layout_marginBottom="27dp"
+        android:ems="10"
+        android:hint="비밀번호"
+        android:inputType="textPassword"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/bt_sign_in"
+        app:layout_constraintEnd_toEndOf="@+id/username"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/username"
+        app:layout_constraintTop_toBottomOf="@+id/username" />
+
+    <Button
+        android:id="@+id/bt_sign_in"
+        android:layout_width="344dp"
+        android:layout_height="38dp"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/ic_button_field"
+        android:text="로그인"
+        android:textColor="#FFFFFF"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toTopOf="@+id/bt_sign_up"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password" />
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/google_login_button"
+        android:layout_width="344dp"
+        android:layout_height="38dp"
+        android:layout_marginBottom="2dp"
+        app:layout_constraintBottom_toTopOf="@+id/button_findpassword"
+        app:layout_constraintEnd_toEndOf="@+id/bt_sign_up"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/bt_sign_up"
+        app:layout_constraintTop_toBottomOf="@+id/bt_sign_up">
+
+    </com.google.android.gms.common.SignInButton>
+
+
+    <Button
+        android:id="@+id/button_findpassword"
+        android:layout_width="344dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginBottom="47dp"
+        android:background="@android:color/transparent"
+        android:stateListAnimator="@null"
+        android:text="비밀번호 재설정"
+        android:textColor="#1E88E5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/google_login_button"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/google_login_button"
+        app:layout_constraintTop_toBottomOf="@+id/google_login_button" />
+
+    <Button
+        android:id="@+id/bt_sign_up"
+        android:layout_width="344dp"
+        android:layout_height="38dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/ic_button_field"
+        android:text="회원가입"
+        android:textColor="#FFFFFF"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toTopOf="@+id/google_login_button"
+        app:layout_constraintEnd_toEndOf="@+id/bt_sign_in"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/bt_sign_in"
+        app:layout_constraintTop_toBottomOf="@+id/bt_sign_in" />
+
+    <include
+        layout="@layout/view_loader"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

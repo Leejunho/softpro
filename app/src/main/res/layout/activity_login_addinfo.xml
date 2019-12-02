@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.activity_login_addInfo">
+
+    <ImageView
+        android:id="@+id/imageView8"
+        android:layout_width="320dp"
+        android:layout_height="95dp"
+        android:layout_marginTop="80dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/img_logo" />
+
+    <EditText
+        android:id="@+id/editText_telephone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="전화번호"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="@+id/editText_nickname"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/editText_nickname"
+        app:layout_constraintTop_toBottomOf="@+id/editText_nickname" />
+
+    <EditText
+        android:id="@+id/editText_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="284dp"
+        android:ems="10"
+        android:hint="닉네임"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editText_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="주소"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="@+id/editText_telephone"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/editText_telephone"
+        app:layout_constraintTop_toBottomOf="@+id/editText_telephone" />
+
+    <Button
+        android:id="@+id/button_input"
+        android:layout_width="284dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/ic_button_field"
+        android:text="입력"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText_address" />
+
+    <include
+        layout="@layout/view_loader"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

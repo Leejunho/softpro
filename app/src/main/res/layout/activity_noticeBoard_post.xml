@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView_posts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:text="맡깁니다"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView_viewCount"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="13"
+                android:gravity="bottom|right"
+                android:paddingEnd="5dp"
+                tools:text="조회수 12" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/menu"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:cardCornerRadius="20dp">
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/ic_more_vert_black_24dp" />
+
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="8px"
+            android:layout_marginBottom="40dp"
+            android:background="@color/colorPrimaryDark" />
+
+        <TextView
+            android:id="@+id/textView_rooms"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:paddingStart="2dp"
+            android:text="물품정보"
+            android:textColor="@color/common_google_signin_btn_text_dark_focused"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/colorPrimaryDark" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
+                android:background="#E2E6FC"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="물품제목"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingStart="5dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                tools:text="김치 맡아주세요" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/colorPrimaryDark" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
+                android:background="#E2E6FC"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="제안금액"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView_price"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:paddingStart="5dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                tools:text="20000원" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/colorPrimaryDark" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView14"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
+                android:background="#E2E6FC"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="등록일시"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView_createdAt"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:paddingStart="5dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                tools:text="2019-11-24 11:02:35 등록" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/colorPrimaryDark" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView120"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
+                android:background="#E2E6FC"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="기간"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView_term"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:paddingStart="5dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                tools:text="11/30 오후 6:00 까지" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/colorPrimaryDark" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView121"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
+                android:background="#E2E6FC"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="내용"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView_contents"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingStart="5dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                tools:text="테스트 내용입니다.  테스트 내용입니다.  테스트 내용입니다.  테스트 내용입니다.  테스트 내용입니다.  테스트 내용입니다.  테스트 내용입니다.  테스트 내용입니다. " />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:layout_marginBottom="50dp"
+            android:background="@color/colorPrimaryDark" />
+
+        <TextView
+            android:id="@+id/textView18"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:paddingStart="2dp"
+            android:text="신청자정보"
+            android:textColor="@color/common_google_signin_btn_text_dark_focused"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/colorPrimaryDark" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView101"
+                android:layout_width="80dp"
+                android:layout_height="30dp"
+                android:layout_weight="0"
+                android:background="#E2E6FC"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="닉네임"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView_nickname"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:paddingStart="5dp"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                tools:text="우연히 지나가던 행인" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/colorPrimaryDark" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView1031"
+                android:layout_width="80dp"
+                android:layout_height="30dp"
+                android:layout_weight="0"
+                android:background="#E2E6FC"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="거래점수"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView_point"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:paddingStart="5dp"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                tools:text="0점" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/colorPrimaryDark" />
+
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="거래점수는 거래 추천당 1점 씩 증가합니다"
+            android:textColor="#AAAAAA" />
+
+        <TextView
+            android:id="@+id/textView_i1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:paddingStart="2dp"
+            android:text="입수자정보"
+            android:textColor="@color/common_google_signin_btn_text_dark_focused"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <View
+            android:id="@+id/view_i2"
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/colorPrimaryDark" />
+
+        <LinearLayout
+            android:id="@+id/LinearLayout_i2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView10212"
+                android:layout_width="80dp"
+                android:layout_height="30dp"
+                android:layout_weight="0"
+                android:background="#E2E6FC"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="닉네임"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView_inickname"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:paddingStart="5dp"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                tools:text="사과를 유심히 보는 뉴턴" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/view_i4"
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/colorPrimaryDark" />
+
+        <LinearLayout
+            android:id="@+id/LinearLayout_i3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView1012"
+                android:layout_width="80dp"
+                android:layout_height="30dp"
+                android:layout_weight="0"
+                android:background="#E2E6FC"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="거래점수"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView_ipoint"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:paddingStart="5dp"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                tools:text="0점" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/view_i3"
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/colorPrimaryDark" />
+
+        <LinearLayout
+            android:id="@+id/LinearLayout_i4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView10122"
+                android:layout_width="80dp"
+                android:layout_height="30dp"
+                android:layout_weight="0"
+                android:background="#E2E6FC"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="택배함 번호"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView_iboxnum"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:paddingStart="5dp"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                tools:text="102" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/view_i"
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/colorPrimaryDark" />
+
+        <Button
+            android:id="@+id/button_recommend"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="60dp"
+            android:background="#FFFB00"
+            android:shadowColor="@color/colorPrimary"
+            android:text="추천 하기"
+            android:textColor="@color/common_google_signin_btn_text_dark_focused" />
+
+        <TextView
+            android:id="@+id/textView_currentprogress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:textColor="@color/colorAccent"
+            tools:text="거래가 진행중인 물품입니다 or 거래가 완료된 물품입니다" />
+
+        <Button
+            android:id="@+id/button_send"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorPrimaryDark"
+            android:shadowColor="@color/colorPrimary"
+            android:text="입수 신청"
+            android:textColor="@color/common_google_signin_btn_text_dark_default" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:paddingStart="60dp"
+            android:paddingEnd="60dp"
+            android:paddingBottom="60dp">
+
+            <Button
+                android:id="@+id/button_complete"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginRight="30dp"
+                android:layout_weight="1"
+                android:background="@color/colorAccent"
+                android:shadowColor="@color/colorPrimary"
+                android:text="거래 완료"
+                android:textColor="@color/common_google_signin_btn_text_dark_default" />
+
+            <Button
+                android:id="@+id/button_cancel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginStart="30dp"
+                android:layout_weight="1"
+                android:background="#6E6F7A"
+                android:shadowColor="@color/colorPrimary"
+                android:text="거래 취소"
+                android:textColor="@color/common_google_signin_btn_text_dark_default" />
+
+        </LinearLayout>
+
+        <include
+            layout="@layout/view_loader"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"/>
+    </LinearLayout>
+
+</ScrollView>
