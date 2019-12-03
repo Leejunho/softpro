@@ -175,8 +175,14 @@ public class activity_noticeBoard_postCheck extends activity_main_basic {
                     if (document != null) {
                         if (document.exists()) {
                             // 게시판 카운트 개수 업데이트
-                            memberInfo memberInfo = new memberInfo(document.getData().get("nickname").toString(), document.getData().get("address").toString(), document.getData().get("telephone").toString(), Integer.valueOf(document.getData().get("point").toString()), user.getUid(), document.getData().get("usermsg").toString(), document.getData().get("token").toString(), document.getData().get("replacenum").toString(), Integer.valueOf(document.getData().get("countpost").toString()), Integer.valueOf(document.getData().get("countbox").toString()), Integer.valueOf(document.getData().get("countmsg").toString()) + 1);
-                            uploader_memberInfo(documentReference, memberInfo);
+                            if(document.getData().get("photoUrl") == null) {
+                                memberInfo memberInfo = new memberInfo(document.getData().get("nickname").toString(), document.getData().get("address").toString(), document.getData().get("telephone").toString(), Integer.valueOf(document.getData().get("point").toString()), user.getUid(), document.getData().get("usermsg").toString(), document.getData().get("token").toString(), document.getData().get("replacenum").toString(), Integer.valueOf(document.getData().get("countpost").toString()), Integer.valueOf(document.getData().get("countbox").toString()), Integer.valueOf(document.getData().get("countmsg").toString()) + 1);
+                                uploader_memberInfo(documentReference, memberInfo);
+                            }
+                            else {
+                                memberInfo memberInfo = new memberInfo(document.getData().get("nickname").toString(), document.getData().get("address").toString(), document.getData().get("telephone").toString(), document.getData().get("photoUrl").toString() ,Integer.valueOf(document.getData().get("point").toString()), user.getUid(), document.getData().get("usermsg").toString(), document.getData().get("token").toString(), document.getData().get("replacenum").toString(), Integer.valueOf(document.getData().get("countpost").toString()), Integer.valueOf(document.getData().get("countbox").toString()), Integer.valueOf(document.getData().get("countmsg").toString()) + 1);
+                                uploader_memberInfo(documentReference, memberInfo);
+                            }
                         }
                     }
                 }

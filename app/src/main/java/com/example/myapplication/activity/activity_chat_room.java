@@ -83,15 +83,15 @@ public class activity_chat_room extends activity_main_basic {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0: {
-                    Log.d("0", "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@0번 실행 ");
+                    Log.d("0", " ");
                     return new fragment_chat_chatRoom();
                 }
                 case 1: {
-                    Log.d("1", "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@1번 실행: ");
+                    Log.d("1", " ");
                     return new fragment_chat_chatRoom();
                 }
                 default: {
-                    Log.d("2", "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2번 실행: ");
+                    Log.d("2", " ");
                     return new fragment_chat_chatRoom();
                 }
             }

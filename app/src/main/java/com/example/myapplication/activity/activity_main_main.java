@@ -11,7 +11,6 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,10 +59,6 @@ public class activity_main_main extends activity_main_basic {
 
     private int count;
     private int count2;
-
-    private String word;
-    private int start;
-    private int end;
 
     private long backbtnTime = 0;
 
